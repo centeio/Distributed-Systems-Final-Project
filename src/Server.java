@@ -102,14 +102,14 @@ public class Server {
 		
 		private String respondPOST(HttpExchange t) throws IOException, JSONException {
 			
-			String response;
+			String response = "";
 			
 			JSONObject info = parseIntoJSON(t);
 			
 			//Show message received
 			System.out.println("POST plate=" + info.getString("plate") + " owner=" + info.getString("owner"));
 			
-			Vehicle v = vehicles.get(info.getString("plate"));
+			/*Vehicle v = vehicles.get(info.getString("plate"));
 			if(v == null){
 				JSONObject msg   = new JSONObject();
 				JSONObject param   = new JSONObject();
@@ -131,11 +131,11 @@ public class Server {
 				msg.put("success", param);
 				
 				response =  msg.toString();
-			}
+			}*/
 			return response;
 		}
 		
-		private String respondPUT(HttpExchange t) throws IOException, JSONException {
+	/*	private String respondPUT(HttpExchange t) throws IOException, JSONException {
 
 			JSONObject info = parseIntoJSON(t);
 			
@@ -189,7 +189,7 @@ public class Server {
 			}
 			return response;
 		}
-		
+		*/
 		private JSONObject parseIntoJSON(HttpExchange t) throws IOException, JSONException {
 			
 			byte[] rbuf = new byte[(int) Math.pow(2,16)];
