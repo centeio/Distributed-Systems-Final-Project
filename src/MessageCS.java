@@ -1,9 +1,27 @@
-//para localização Client -> Server com Ação (LIKE ou null) 
-public class MessageCS extends Message{
+import org.json.JSONException;
+import org.json.JSONObject;
 
-	public MessageCS(String localization, String action) {
+//para localização Client -> Server com Ação (LIKE ou null) 
+public class MessageCS implements Message{
+	String location;
+	String action;
+
+	public MessageCS(String location, String action) {
 		super();
-		// TODO Auto-generated constructor stub
+		
+		this.location = location;
+		this.action = action;
+	}
+
+	@Override
+	public String getString() throws JSONException{
+		//{"type":"request","location":"value","action":"value"}
+		JSONObject info   = new JSONObject();
+		info.put("type", "request");
+		info.put("location", this.location);
+		info.put("action", this.action);
+		
+		return info.toString();
 	}
 	
 }
