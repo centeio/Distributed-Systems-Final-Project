@@ -1,28 +1,53 @@
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeUnit;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+//para localizaï¿½ï¿½o Client -> Server com Aï¿½ï¿½o (LIKE ou null) 
+public class MessageCS implements Message{
+	private final ScheduledExecutorService scheduler =	Executors.newScheduledThreadPool(1);	private Client client = null;
 
-//para localização Client -> Server com Ação (LIKE ou null) 
-public class MessageCS extends Message{
-	private final ScheduledExecutorService scheduler =	Executors.newScheduledThreadPool(1);
-
-	public MessageCS(String location, String action) {
+	public MessageCS(Client client) {
 		super();
-		sender();
-	}
-
-	public void sender() {
-		final Runnable sender = new Runnable() {
+		this.client = client;		
+		sender();	}
+	public void sender() {		final Runnable sender = new Runnable() {
 			public void run() { 
-				
+				System.out.println(client.getlocation());
+				ArrayList<String> action;
+				String actionname = null, fileid = null;
+				if((action = client.getNextAction()) != null){
+					actionname = action.get(0);
+					fileid = action.get(1);
 				}
-		};
-		
-		scheduler.scheduleAtFixedRate(sender, 0, 1, TimeUnit.SECONDS);
+				try {
+					String message = getString(client.getlocation(),actionname,client.getId(),fileid);
 
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		scheduler.scheduleAtFixedRate(sender, 0, 1, TimeUnit.SECONDS);
+	}
+	@Override
+	public String getString(String location, String action, String clientid, String fileid) throws JSONException{		//{"type":"request","location":"value","action":"value"}		JSONObject info   = new JSONObject();
+		info.put("type", "request");
+		info.put("location", location);
+		info.put("action", action);	
+		info.put("file",fileid);
+		info.put("clientid", clientid);	
+		return info.toString();
 	}
 
-
-}
+	@Override
+	public String getString() throws JSONException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

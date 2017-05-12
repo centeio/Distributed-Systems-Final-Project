@@ -11,16 +11,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Unicast {
-	private Client client = null;
-	private Server server = null;
+
 
 	public Unicast(Object peer) {
-		if(peer instanceof Client){
-			this.client = (Client)peer;
-		}else if(peer instanceof Server){
-			this.server = (Server)peer;
-		}
-		
+
 
 	}
 	
@@ -67,7 +61,7 @@ public class Unicast {
 		}
 	}
 */
-	private static void sendPOST(String action, String idFile, String clientId, String location, boolean isClient) throws MalformedURLException, IOException, ProtocolException, JSONException {
+	private static void sendPOST(String message) throws MalformedURLException, IOException, ProtocolException, JSONException {
 		URL url = new URL ("http://127.0.0.1:8000/projeto");
 
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -77,24 +71,11 @@ public class Unicast {
 		con.setDoOutput(true);
 		con.setDoInput(true);
 		con.setRequestProperty("Content-Type", "charset=UTF-8");
-		
-		
-		JSONObject info   = new JSONObject();
-		JSONObject param   = new JSONObject();
-		if(isClient){
-			//Putting JSON on it {"client":{"file":"value","clientid":"value","local":"value","action":"value"}}
-			info.put("file",idFile);
-			info.put("clientid",clientId);
-			info.put("local", location);
-			info.put("action", action);
-			param.put("client", info);
-		}else{
-			//TODO Server JSON POST
-		}
+	
 		
 		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
 
-		wr.write(param.toString());
+		wr.write(message);
 		wr.flush();
 		wr.close();
 
@@ -114,7 +95,8 @@ public class Unicast {
 
 		//print result
 		System.out.println("Got here");
-		info = new JSONObject(response.toString());
+		
+		JSONObject info = new JSONObject(response.toString());
 		try {
 			info = info.getJSONObject("success");
 			System.out.println(info.getString("plate") + " now belongs to " + info.getString("owner"));				

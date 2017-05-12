@@ -1,14 +1,19 @@
+import java.util.ArrayList;
+import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
 public class Client {
 	private String location = null;
 	private Locator locator;
 	private String serverip;
 	private Unicast unicast;
+	private String id;
+	private Queue<ArrayList<String>> actions;
 	public BlockingQueue<Object> queue;
 
 	public static void main(String[] args){
@@ -46,6 +51,18 @@ public class Client {
 
 	public void setServerip(String serverip) {
 		this.serverip = serverip;
+	}
+
+	public ArrayList<String> getNextAction() {		
+		return actions.poll();
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	//TODO Thread para ler sempre localização e enviar
