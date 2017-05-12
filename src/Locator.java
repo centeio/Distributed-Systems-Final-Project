@@ -20,7 +20,7 @@ public class Locator extends Thread {
 			if(input.toLowerCase() == "sair"){
 				closed = true;
 			}else{
-				client.setLocalization(input.toLowerCase());
+				client.setlocation(input.toLowerCase());
 			}
 		}while(!closed);
 	}

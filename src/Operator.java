@@ -9,8 +9,12 @@ public class Operator implements Runnable{
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		
+		/*while(true){
+			try {
+				Object protocol = peer.queue.take();
+				
+				//work 
+				if(protocol instanceof Delete){*/		
 	}
 
 	public Client getC() {

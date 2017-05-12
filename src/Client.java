@@ -1,9 +1,11 @@
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Client {
-	private String localization = null;
+	private String location = null;
 	private Locator locator;
 	private String serverip;
 	private Unicast unicast;
@@ -19,6 +21,7 @@ public class Client {
 		locator = new Locator(this);
 		unicast = new Unicast(this);
 
+
 		ExecutorService executor = Executors.newFixedThreadPool(5);
 		for (int i = 0; i < 1; i++) {
 			Runnable worker = new Operator(this);
@@ -29,12 +32,12 @@ public class Client {
 	}
 
 
-	public String getLocalization() {
-		return localization;
+	public String getlocation() {
+		return location;
 	}
 
-	public void setLocalization(String localization) {
-		this.localization = localization;
+	public void setlocation(String location) {
+		this.location = location;
 	}
 
 	public String getServerip() {
@@ -44,8 +47,6 @@ public class Client {
 	public void setServerip(String serverip) {
 		this.serverip = serverip;
 	}
-
-	//TODO BlockingQueue para: guardar chunks, fazer restore do ficheiro 
 
 	//TODO Thread para ler sempre localização e enviar
 
