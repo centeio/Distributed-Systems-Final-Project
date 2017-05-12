@@ -21,4 +21,11 @@ public class MessageSC implements Message {
 		return info.toString();
 	}
 
+
+	@Override
+	public String getString(String location, String action, String clientid, String fileid) throws JSONException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
