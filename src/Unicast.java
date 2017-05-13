@@ -19,7 +19,7 @@ public class Unicast {
 	}
 	
 /*	private static void sendGET(String plate) throws MalformedURLException, IOException, ProtocolException, JSONException {
-		URL url = new URL ("http://127.0.0.1:8000/projeto?plate=" + plate);
+		URL url = new URL ("http://127.0.0.1:8000/SDIS?plate=" + plate);
 
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -61,8 +61,8 @@ public class Unicast {
 		}
 	}
 */
-	private static void sendPOST(String message) throws MalformedURLException, IOException, ProtocolException, JSONException {
-		URL url = new URL ("http://127.0.0.1:8000/projeto");
+	public static void sendPOST(String message) throws MalformedURLException, IOException, ProtocolException, JSONException {
+		URL url = new URL ("http://127.0.0.1:8000/SDIS");
 
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -113,7 +113,7 @@ public class Unicast {
 	}
 	
 /*	private static void sendPUT(String plate, String owner) throws MalformedURLException, IOException, ProtocolException, JSONException {
-		URL url = new URL ("http://127.0.0.1:8000/projeto");
+		URL url = new URL ("http://127.0.0.1:8000/SDIS");
 
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -157,7 +157,7 @@ public class Unicast {
 	}
 	
 	private static void sendDELETE(String plate) throws MalformedURLException, IOException, ProtocolException, JSONException {
-		URL url = new URL ("http://127.0.0.1:8000/projeto?plate=" + plate);
+		URL url = new URL ("http://127.0.0.1:8000/SDIS?plate=" + plate);
 		
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		

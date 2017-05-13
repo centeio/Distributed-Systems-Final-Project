@@ -6,8 +6,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.management.Notification;
+import javax.management.NotificationListener;
 
-public class Client {
+
+public class Client implements NotificationListener {
 	private String location = null;
 	private Locator locator;
 	private String serverip;
@@ -24,7 +27,7 @@ public class Client {
 	public Client() {
 		super();
 		locator = new Locator(this);
-		unicast = new Unicast(this);
+		setUnicast(new Unicast(this));
 
 
 		ExecutorService executor = Executors.newFixedThreadPool(5);
@@ -65,12 +68,20 @@ public class Client {
 		this.id = id;
 	}
 
-	//TODO Thread para ler sempre localização e enviar
+	public Unicast getUnicast() {
+		return unicast;
+	}
+
+	public void setUnicast(Unicast unicast) {
+		this.unicast = unicast;
+	}
+
+	@Override
+	public void handleNotification(Notification not, Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	//TODO Thread para receber notificações e ficheiros	
-
-
-
-	//TODO RESTORE para Client reconstruir ficheiro a partir dos chunks recebidos
 
 }

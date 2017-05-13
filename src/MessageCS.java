@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -26,12 +29,23 @@ public class MessageCS implements Message{
 				}
 				try {
 					String message = getString(client.getlocation(),actionname,client.getId(),fileid);
+					//TODO send message to server
+				//	client.getUnicast().sendPOST(message);
 
 				} catch (JSONException e) {
 					e.printStackTrace();
+		/*		} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();*/
 				}
 			}
-		};
+		};	/*runs sender every second*/
 		scheduler.scheduleAtFixedRate(sender, 0, 1, TimeUnit.SECONDS);
 	}
 	@Override
