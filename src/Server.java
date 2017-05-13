@@ -19,12 +19,18 @@ public class Server {
 	    	String method = t.getRequestMethod();
 	    	System.out.println(method);
 	    	
-	    	//Parse JSON {"type":"request","location":"value","action":"value"}
+	    	//Parse JSON {"type":"request","location":"value","action":"value", "file":id, "clientid":id}
 	    	try {
 	    		JSONObject info = parseIntoJSON(t);
 	    		
 	    		switch((String) info.get("type")){
 	    		case "request":
+	    			
+	    			if(info.get("action") != null){
+	    				//TODO update file
+	    			}
+	    			
+	    			//TODO get file chunks for location
 	    			Chunk fileChunk = new Chunk(); 
 	    			
 	    			//{"type":"getInfo", "chunk":value}
