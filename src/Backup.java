@@ -12,14 +12,16 @@ public class Backup {
         return chunk;
     }
 
-    public void setChunk(Chunk chunk) {
-        this.chunk = chunk;
+    public void setChunk(Chunk chunks) {
+        this.chunk = chunks;
     }
 
     @Override
     public String toString() {
         return "Backup{" +
-                "chunk=" + chunk.toString() +
+                "chunk=" + this.chunk.toString() +
                 '}';
     }
+
+
 }

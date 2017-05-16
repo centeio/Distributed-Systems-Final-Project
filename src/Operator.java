@@ -14,12 +14,23 @@ public class Operator implements Runnable{
 
 	@Override
 	public void run() {
-		/*while(true){
+		while(true) {
 			try {
-				Object protocol = peer.queue.take();
-				
-				//work 
-				if(protocol instanceof Delete){*/		
+				Object protocol = this.c.queue.take();
+
+				if(protocol instanceof Backup){	//Server sending file to client
+					MessageCS message = new MessageCS(this.c);
+					//send message to server asking for file
+					//if file exists, put all chunks on array and create restore object
+					//if not, ignore and continue
+				}else if(protocol instanceof Restore){ //Client receiving file from client
+
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public Client getC() {
@@ -90,23 +101,23 @@ public class Operator implements Runnable{
 	 * Restores a file from an array of chunks.
 	 * Algorithm based on the following StackOverflow question/answer.
 	 * http://stackoverflow.com/questions/4431945/split-and-join-back-a-binary-file-in-java
-	 * @param name Name of the file
 	 */
-	public void restoreFile(String name){
+	public void restoreFile(){
+		String name = this.chunks.get(0).getFilename();
 		File file = new File(name);
 
 		FileOutputStream restoredFile;
 
 		try{
-            restoredFile = new FileOutputStream(file, true);
+			restoredFile = new FileOutputStream(file, true);
 			for(Chunk c: this.chunks){
-                byte[] fileData = c.getData();
+				byte[] fileData = c.getData();
 
-                restoredFile.write(fileData);
-                restoredFile.flush();
+				restoredFile.write(fileData);
+				restoredFile.flush();
 			}
 
-            restoredFile.close();
+			restoredFile.close();
 		}catch(FileNotFoundException e){
 			System.out.println("File " + name + " not found");
 			return;
@@ -118,5 +129,4 @@ public class Operator implements Runnable{
 			e.printStackTrace();
 		}
 	}
-
 }
