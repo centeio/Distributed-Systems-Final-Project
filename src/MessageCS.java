@@ -29,12 +29,11 @@ public class MessageCS implements Message{
 				}
 				try {
 					String message = getString(client.getlocation(),actionname,client.getId(),fileid);
-					//TODO send message to server
-				//	client.getUnicast().sendPOST(message);
+					Unicast.sendPOST(message);
 
 				} catch (JSONException e) {
 					e.printStackTrace();
-		/*		} catch (MalformedURLException e) {
+				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ProtocolException e) {
@@ -42,7 +41,7 @@ public class MessageCS implements Message{
 					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();*/
+					e.printStackTrace();
 				}
 			}
 		};	/*runs sender every second*/
