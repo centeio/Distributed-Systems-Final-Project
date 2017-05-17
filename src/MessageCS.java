@@ -1,11 +1,7 @@
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
@@ -34,24 +30,16 @@ public class MessageCS implements Message{
 						if(!client.locationupdated()){
 							message = getString(client.getlocation());
 							response = Unicast.sendPOST(message);
-							//TODO response gives file information INES 
+							//TODO INES response gives file information
+							fileid = response.getString("fileid");
+							int noChunk = response.getInt("noChunk");
 							client.queue.add(new Download(/*fileid,filelength, etc*/));
 							client.setLocationupdated(true);
-
 						}
 					}
 				
 
-				} catch (JSONException e) {
-					e.printStackTrace();
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ProtocolException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
+				} catch (JSONException | IOException e) {
 					e.printStackTrace();
 				}
 			}

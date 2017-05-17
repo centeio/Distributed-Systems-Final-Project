@@ -19,7 +19,7 @@ public class ServerHandler implements HttpHandler
 		String method = t.getRequestMethod();
 		System.out.println(method);
 
-		//Parse JSON {"type":"request","location":"value","action":"value", "file":id, "clientid":id}
+		//Parse JSON {"type":"request", ...}
 		try {
 			JSONObject info = parseIntoJSON(t);
 			JSONObject json = new JSONObject();
@@ -38,19 +38,22 @@ public class ServerHandler implements HttpHandler
 				break;
 			case "locate":
 				System.out.println(info.get("type"));
-
-				//{"type":"getInfo", "fileid":value}
+				
+				//TODO INES format response JSON {"type":"getInfo", "fileid":value, "noChunk":value}
 				json = new JSONObject();
 				json.put("type", "getInfo");
-				//TODO fileid in response INES
+				//TODO INES get actual fileid and number of chunks
+				json.put("fileid", "id");
+				json.put("noChunk", 1);
+				
 				response = json.toString();
 				break;
 			default:
 				response = "{error : Message not understood}";  
 			}
-		} catch (JSONException e) {
+		}catch (JSONException e) {
 			e.printStackTrace();
-			System.err.println("Expected JSON and it was not found");
+			//System.err.println("Expected JSON and it was not found");
 			response = "{error : JSON expected}";  
 		}
 		

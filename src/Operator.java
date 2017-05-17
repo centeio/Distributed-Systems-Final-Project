@@ -28,8 +28,8 @@ public class Operator implements Runnable{
 					 */
 				}else if(protocol instanceof GetChunk){
 					//NO CLIENTE
-					/*cria pedido para servidor com chunk no x
-					 *timeout se nao receber INES (e enviar do server)
+					/* TODO INES cria pedido para servidor com chunk no x
+					 *timeout se nao receber (e enviar do server)
 					 *quando recebe, SE NÃO EXISTIR coloca em array de ficheiro filename ConcurrentHashMap<String filename,Map<int no, Chunks>>
 					 *se length do Map do filename == a nochunks cria new Restore(filename)
 					 **/
