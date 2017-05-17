@@ -1,0 +1,16 @@
+{"server_files": {
+    "files" : [
+        {"name": "test_file1.jpg",
+        "location": "Sala1",
+        "likes":["Jose", "Maria"]},
+        {"name": "test_file2.jpg",
+        "location": "Sala2",
+        "likes":["Maria"]},
+        {"name": "test_file3.jpg",
+        "location": "Sala3",
+        "likes":["Joao"]},
+        {"name": "test_file4.jpg",
+        "location": "Sala4",
+        "likes":[]},
+    ]
+}}
