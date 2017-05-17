@@ -1,7 +1,12 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MulticastSocket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,12 +28,13 @@ public class ServerHandler implements HttpHandler
 		try {
 			JSONObject info = parseIntoJSON(t);
 			JSONObject json = new JSONObject();
+			
+			System.out.println(info.get("type"));
 
 			switch((String) info.get("type")){
 			case "like":
 				/*guardar informacao de like e iniciar notificacao para restantes clientes NUNO
 				 * alterar ficheiro JSON do servidor NUNO*/ 
-				System.out.println(info.get("type"));
 				json = new JSONObject();
 				json.put("type", "registered");
 				json.put("file", info.get("fileid"));
@@ -37,14 +43,15 @@ public class ServerHandler implements HttpHandler
 
 				break;
 			case "locate":
-				System.out.println(info.get("type"));
+				//TODO INES get actual number of chunks
+				String filename = Server.file_mapping.get(info.get("location")).keySet().iterator().next();
+				int noChunks = 1; //divideFileIntoChunks(filename).size();
 				
 				//TODO INES format response JSON {"type":"getInfo", "fileid":value, "noChunk":value}
 				json = new JSONObject();
 				json.put("type", "getInfo");
-				//TODO INES get actual fileid and number of chunks
-				json.put("fileid", "id");
-				json.put("noChunk", 1);
+				json.put("fileid", filename);
+				json.put("noChunk", noChunks);
 				
 				response = json.toString();
 				break;
@@ -76,5 +83,64 @@ public class ServerHandler implements HttpHandler
 		System.out.println(result);
 
 		return new JSONObject(result);
+	}
+	
+	/**
+	 * Divides a file into an array of chunks with 64KB of size.
+	 * Algorithm based on the following StackOverflow question/answer.
+	 * http://stackoverflow.com/questions/4431945/split-and-join-back-a-binary-file-in-java
+	 * @param name Name of the file
+	 */
+	public ArrayList<Chunk> divideFileIntoChunks(String name){
+
+		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
+		
+		try{
+			File file = new File(name);
+
+			FileInputStream stream = new FileInputStream(file);
+			MulticastSocket socket = new MulticastSocket();
+
+			byte[] chunkData;
+			long filelength = file.length();
+			int chunkMaxSize = 1000 * 64;
+			int readLength = chunkMaxSize;
+			int counter = 1;
+
+			while(filelength > 0){
+				if(filelength < chunkMaxSize){
+					readLength = (int)filelength;
+				}
+
+				chunkData = new byte[readLength];
+
+				int bytesRead = stream.read(chunkData, 0, readLength);
+				filelength -= bytesRead;
+
+				if(chunkData.length != bytesRead){
+					System.out.println("Error reading chunk");
+					break;
+				}
+
+				Chunk c = new Chunk(counter, name, chunkData);
+
+				counter++;
+				chunks.add(c);
+			}
+
+			stream.close();
+			socket.close();
+		}catch(FileNotFoundException e){
+			System.out.println("File " + name + " not found");
+			return null;
+		}catch(SecurityException e){
+			System.out.println("Denied reading file " + name);
+			return null;
+		} catch (IOException e) {
+			System.out.println("Error closing stream of file " + name);
+			return null;
+		}
+		
+		return chunks;
 	}
 }
