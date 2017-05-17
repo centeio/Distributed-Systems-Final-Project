@@ -1,12 +1,12 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.management.Notification;
 import javax.management.NotificationListener;
@@ -21,6 +21,7 @@ public class Client implements NotificationListener {
 	private String id;
 	private Queue<ArrayList<String>> actions;
 	public BlockingQueue<Object> queue;
+	public ConcurrentHashMap<String, HashMap<Integer, Chunk>> files;
 
 	public static void main(String[] args){
 		Client c = new Client();
@@ -33,6 +34,7 @@ public class Client implements NotificationListener {
 		setUnicast(new Unicast(this));
 		actions = new PriorityQueue<ArrayList<String>>();
 		queue = new LinkedBlockingQueue<Object>();
+		files = new ConcurrentHashMap<String, HashMap<Integer, Chunk>>();
 		
 		locator.start();
 		new MessageCS(this);

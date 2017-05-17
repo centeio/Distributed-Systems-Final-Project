@@ -1,6 +1,9 @@
 import java.io.*;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.JSONObject;
 
 public class Operator implements Runnable{
 	private Client c;
@@ -27,12 +30,36 @@ public class Operator implements Runnable{
 					 *   colocar processo em client.queue
 					 */
 				}else if(protocol instanceof GetChunk){
+					GetChunk gc = (GetChunk) protocol;
 					//NO CLIENTE
-					/* TODO INES cria pedido para servidor com chunk no x
-					 *timeout se nao receber (e enviar do server)
-					 *quando recebe, SE NÃO EXISTIR coloca em array de ficheiro filename ConcurrentHashMap<String filename,Map<int no, Chunks>>
-					 *se length do Map do filename == a nochunks cria new Restore(filename)
-					 **/
+					// TODO INES cria pedido para servidor com chunk no x
+					JSONObject info = new JSONObject();
+
+					info.put("type", "getChunk");
+					info.put("fileid", gc.getFilename());
+					info.put("chunkNo", gc.getChunkNo());
+
+					JSONObject response = Unicast.sendPOST(info.toString());
+					
+					// timeout se nao receber (e enviar do server)
+					
+					// quando recebe, SE NAO EXISTIR coloca em array de ficheiro filename ConcurrentHashMap<String filename,Map<int no, Chunks>>
+					HashMap<Integer, Chunk> chunks = c.files.get(gc.getFilename());
+					
+					if(chunks != null && chunks.get(gc.getChunkNo()) == null){			
+						chunks.put(gc.getChunkNo(), new Chunk(gc.getChunkNo(), gc.getFilename(), response.getString("data").getBytes()));
+					}
+					
+					// se length do Map do filename == a nochunks cria new Restore(filename)
+					if(chunks.size() == gc.getNoChunks()){
+						//Transform Map into Array
+						ArrayList<Chunk> chunksArray = new ArrayList<Chunk>();
+						for(int i = 0; i < gc.getNoChunks(); i++){
+							chunksArray.add(chunks.get(i));
+						}
+						
+						c.queue.put(new Restore(chunksArray));
+					}
 					
 				}else if(protocol instanceof Restore){ //Client receiving file from client
 					//NO CLIENTE 
