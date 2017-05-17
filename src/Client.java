@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +14,7 @@ import javax.management.NotificationListener;
 
 public class Client implements NotificationListener {
 	private String location = null;
+	private boolean locationupdated = true;
 	private Locator locator;
 	private String serverip;
 	private Unicast unicast;
@@ -28,7 +31,11 @@ public class Client implements NotificationListener {
 		super();
 		locator = new Locator(this);
 		setUnicast(new Unicast(this));
-
+		actions = new PriorityQueue<ArrayList<String>>();
+		queue = new LinkedBlockingQueue<Object>();
+		
+		locator.start();
+		new MessageCS(this);
 
 		ExecutorService executor = Executors.newFixedThreadPool(5);
 		for (int i = 0; i < 1; i++) {
@@ -46,6 +53,7 @@ public class Client implements NotificationListener {
 
 	public void setlocation(String location) {
 		this.location = location;
+		this.locationupdated = false;
 	}
 
 	public String getServerip() {
@@ -82,6 +90,14 @@ public class Client implements NotificationListener {
 		
 	}
 
-	//TODO Thread para receber notificações e ficheiros	
+	public boolean locationupdated() {
+		return locationupdated;
+	}
+
+	public void setLocationupdated(boolean locationupdated) {
+		this.locationupdated = locationupdated;
+	}
+
+	//TODO Thread para receber notificaes e ficheiros	
 
 }

@@ -13,8 +13,10 @@ import org.json.JSONObject;
 public class Unicast {
 
 
-	public Unicast(Object peer) {
+	private Client client;
 
+	public Unicast(Client client) {
+		this.client = client;
 
 	}
 	
@@ -61,7 +63,7 @@ public class Unicast {
 		}
 	}
 */
-	public static void sendPOST(String message) throws MalformedURLException, IOException, ProtocolException, JSONException {
+	public static JSONObject sendPOST(String message) throws MalformedURLException, IOException, ProtocolException, JSONException {
 		URL url = new URL ("http://127.0.0.1:8000/SDIS");
 
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -87,29 +89,18 @@ public class Unicast {
 		        new InputStreamReader(con.getInputStream()));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
-
+		
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
 		}
 		in.close();
 
 		//print result
-		System.out.println("Got here");
+		System.out.println("Got here " + response.toString());
 		
 		JSONObject info = new JSONObject(response.toString());
-		try {
-			info = info.getJSONObject("success");
-			System.out.println(info.getString("plate") + " now belongs to " + info.getString("owner"));				
-				
-		} catch (JSONException e) {
-			try {
-				info = info.getJSONObject("error");
-				System.out.println("ERROR: " + info.getString("msg"));
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+		
+		return info;
 	}
 	
 /*	private static void sendPUT(String plate, String owner) throws MalformedURLException, IOException, ProtocolException, JSONException {

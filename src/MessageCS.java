@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-//para localiza��o Client -> Server com A��o (LIKE ou null) 
+//para localizao Client -> Server com Ao (LIKE ou null) 
 public class MessageCS implements Message{
 	private final ScheduledExecutorService scheduler =	Executors.newScheduledThreadPool(1);	private Client client = null;
 
@@ -20,16 +20,27 @@ public class MessageCS implements Message{
 		sender();	}
 	public void sender() {		final Runnable sender = new Runnable() {
 			public void run() { 
-				System.out.println(client.getlocation());
 				ArrayList<String> action;
-				String actionname = null, fileid = null;
-				if((action = client.getNextAction()) != null){
-					actionname = action.get(0);
-					fileid = action.get(1);
-				}
+				JSONObject response;
+				String actionname = null, fileid = null, message = null;
 				try {
-					String message = getString(client.getlocation(),actionname,client.getId(),fileid);
-					Unicast.sendPOST(message);
+					if((action = client.getNextAction()) != null){
+						actionname = action.get(0);
+						fileid = action.get(1);
+						message = getString(actionname,fileid);
+						response = Unicast.sendPOST(message);
+
+					}else{
+						if(!client.locationupdated()){
+							message = getString(client.getlocation());
+							response = Unicast.sendPOST(message);
+							//TODO response gives file information INES 
+							client.queue.add(new Download(/*fileid,filelength, etc*/));
+							client.setLocationupdated(true);
+
+						}
+					}
+				
 
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -44,23 +55,31 @@ public class MessageCS implements Message{
 					e.printStackTrace();
 				}
 			}
-		};	/*runs sender every second*/
-		scheduler.scheduleAtFixedRate(sender, 0, 1, TimeUnit.SECONDS);
+		};		/*runs sender every second*/
+		System.out.println("before sender");
+		scheduler.scheduleAtFixedRate(sender, 0, 1, TimeUnit.SECONDS);
+		System.out.println("after sender");
+
 	}
-	@Override
-	public String getString(String location, String action, String clientid, String fileid) throws JSONException{		//{"type":"request","location":"value","action":"value"}		JSONObject info   = new JSONObject();
-		info.put("type", "request");
+	@Override
+	public String getString(String location) throws JSONException{		//{"type":"request","location":"value","action":"value"}		JSONObject info   = new JSONObject();
+		info.put("type", "locate");
 		info.put("location", location);
-		info.put("action", action);	
-		info.put("file",fileid);
-		info.put("clientid", clientid);	
+
 		return info.toString();
 	}
 
 	@Override
-	public String getString() throws JSONException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public String getString(String action, String fileid) throws JSONException{
+		//{"type":"request","location":"value","action":"value"}
+		JSONObject info = new JSONObject();
+
+		info.put("type", action);
+		info.put("fileid", fileid);
+
+		return info.toString();
+
+	}
+
 
 }

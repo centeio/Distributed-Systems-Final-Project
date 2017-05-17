@@ -1,10 +1,13 @@
 //por chunk
-public class Backup {
+public class Download {
     private Chunk chunk;
+    private String message = "check";
 
-    public Backup(){}
+    public Download(){
+    	
+    }
 
-    public Backup(Chunk c){
+    public Download(Chunk c){
         this.chunk = c;
     }
 
@@ -22,6 +25,14 @@ public class Backup {
                 "chunk=" + this.chunk.toString() +
                 '}';
     }
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 
 }

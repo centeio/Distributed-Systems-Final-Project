@@ -18,12 +18,25 @@ public class Operator implements Runnable{
 			try {
 				Object protocol = this.c.queue.take();
 
-				if(protocol instanceof Backup){	//Server sending file to client
-					MessageCS message = new MessageCS(this.c);
-					//send message to server asking for file
-					//if file exists, put all chunks on array and create restore object
-					//if not, ignore and continue
+				if(protocol instanceof Download){
+					System.out.println(((Download) protocol).getMessage());
+					//NO CLIENTE
+					/*if(protocol.chunk() == null) NUNO
+					 * ciclo com até i=nochunks
+					 *   novo processo de 0 a nochunks para pedir chunk a Server (com filename e filelength)
+					 *   colocar processo em client.queue
+					 */
+				}else if(protocol instanceof GetChunk){
+					//NO CLIENTE
+					/*cria pedido para servidor com chunk no x
+					 *timeout se nao receber INES (e enviar do server)
+					 *quando recebe, SE NÃO EXISTIR coloca em array de ficheiro filename ConcurrentHashMap<String filename,Map<int no, Chunks>>
+					 *se length do Map do filename == a nochunks cria new Restore(filename)
+					 **/
+					
 				}else if(protocol instanceof Restore){ //Client receiving file from client
+					//NO CLIENTE 
+					//TODO alterar funcao para map NUNO
 
 				}
 
