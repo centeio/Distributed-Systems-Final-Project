@@ -31,7 +31,7 @@ public class MessageCS implements Message{
 							message = getString(client.getlocation());
 							response = Unicast.sendPOST(message);
 							//TODO INES response gives file information
-							fileid = response.getString("fileid");
+							fileid = response.getString("filename");
 							int noChunk = response.getInt("noChunk");
 							client.queue.add(new Download(/*fileid,filelength, etc*/));
 							client.setLocationupdated(true);
