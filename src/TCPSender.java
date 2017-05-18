@@ -10,23 +10,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TCPSender implements Runnable{
+	private Socket socket;
+	private String message;
+	public TCPSender(Socket socket, String message){
+		super();
+		this.socket = socket;
+	}
+	
 	
 	@Override
 	public void run() {
-		ServerSocket welcomeSocket;
 		try {
-			welcomeSocket = new ServerSocket(6789);
-
-			Socket socket = welcomeSocket.accept();
-			//from Client
-			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			
-			
-
-			while (true) {
 				DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-				output.writeBytes("oi");
-			}
+				output.writeBytes(message);
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

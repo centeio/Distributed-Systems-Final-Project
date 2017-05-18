@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Map;
@@ -23,11 +24,14 @@ public class Server {
 	//filename = ArrayList<Chunk>
 	static Map<String, ArrayList<Chunk>> chunks_mapping = new ConcurrentHashMap<String, ArrayList<Chunk>>();
 	
+	static ArrayList<Socket> clients;
+	
 	public static void main(String[] args) {
 		if(args.length < 2){
 			System.out.println("Usage Server <ip address> <port>");
 			return;
 		}
+		clients = new ArrayList<Socket>();
 		setup();		
 		//HTTP Server
 		final String IP = args[0];		final int PORT = Integer.parseInt(args[1]);
@@ -153,5 +157,10 @@ public class Server {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void addClient(Socket socket) {
+		clients.add(socket);
+		
 	}
 }

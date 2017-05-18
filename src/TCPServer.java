@@ -22,7 +22,7 @@ public class TCPServer implements Runnable {
 			//from Client
 		BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
 		
-	//	server.addClient(input);
+		server.addClient(socket);
 		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
