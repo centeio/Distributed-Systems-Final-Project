@@ -16,7 +16,7 @@ public class TCPServer implements Runnable {
 	public void run() {
 		ServerSocket welcomeSocket;
 		try {
-			welcomeSocket = new ServerSocket(6789);
+			welcomeSocket = new ServerSocket(2554);
 
 		Socket socket = welcomeSocket.accept();
 			//from Client
