@@ -3,10 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="java-json.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/httpCore"/>
-	<classpathentry kind="lib" path="/usr/users2/mieic2014/up201406990/public_html/SDIS/SDIS-final/httpcomponents-core-4.4.6-bin/httpcomponents-core-4.4.6/lib/commons-cli-1.2.jar"/>
-	<classpathentry kind="lib" path="/usr/users2/mieic2014/up201406990/public_html/SDIS/SDIS-final/httpcomponents-core-4.4.6-bin/httpcomponents-core-4.4.6/lib/httpcore-4.4.6.jar"/>
-	<classpathentry kind="lib" path="/usr/users2/mieic2014/up201406990/public_html/SDIS/SDIS-final/httpcomponents-core-4.4.6-bin/httpcomponents-core-4.4.6/lib/httpcore-ab-4.4.6.jar"/>
-	<classpathentry kind="lib" path="/usr/users2/mieic2014/up201406990/public_html/SDIS/SDIS-final/httpcomponents-core-4.4.6-bin/httpcomponents-core-4.4.6/lib/httpcore-nio-4.4.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HTTPCore"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

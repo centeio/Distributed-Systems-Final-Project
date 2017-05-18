@@ -19,11 +19,18 @@ public class Server {
 	
 	//location = <filename, numChunks>
 	static Map<String, Map<String, Integer>> file_mapping = new ConcurrentHashMap<String, Map<String, Integer>> ();
-
+	
+	//filename = ArrayList<Chunk>
+	static Map<String, ArrayList<Chunk>> chunks_mapping = new ConcurrentHashMap<String, ArrayList<Chunk>>();
+	
 	public static void main(String[] args) {
-		setup();
-				Server s = new Server();		//HTTP Server
-		final String IP = "127.0.0.1";		final int PORT = 8000;
+		if(args.length < 2){
+			System.out.println("Usage Server <ip address> <port>");
+			return;
+		}
+		setup();		
+		//HTTP Server
+		final String IP = args[0];		final int PORT = Integer.parseInt(args[1]);
 		try {
 			InetSocketAddress inet = new InetSocketAddress(IP, PORT);
 			HttpServer server = HttpServer.create(inet, 0);			server.createContext("/SDIS", new ServerHandler());

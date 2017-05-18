@@ -60,8 +60,11 @@ public class ServerHandler implements HttpHandler
 			case "locate":
 				//TODO INES get actual number of chunks
 				filename = Server.file_mapping.get(info.get("location")).keySet().iterator().next();
-				ArrayList<Chunk> chunks = divideFileIntoChunks(filename);
-				int noChunks = chunks.size();
+				if(Server.chunks_mapping.get(filename) == null){
+					ArrayList<Chunk> chunks = divideFileIntoChunks(filename);
+					Server.chunks_mapping.put(filename, chunks);
+				}
+				int noChunks = Server.chunks_mapping.get(filename).size();
 				
 				//format response JSON {"type":"getInfo", "filename":value, "noChunk":value}
 				json = new JSONObject();
