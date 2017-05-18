@@ -92,7 +92,7 @@ public class ServerHandler implements HttpHandler
 				json.put("type", "returnChunk");
 				json.put("filename", filename);
 				json.put("chunkNo", chunkNo);
-				json.put("data", data.toString());
+				json.put("data", new String(data, "ISO-8859-1"));
 				
 				response = json.toString();
 				break;
@@ -105,7 +105,7 @@ public class ServerHandler implements HttpHandler
 			response = "{error : JSON expected}";  
 		}
 		
-		System.out.println(response);
+		//System.out.println(response);
 
 		t.sendResponseHeaders(200, response.length());
 		OutputStream os = t.getResponseBody();
