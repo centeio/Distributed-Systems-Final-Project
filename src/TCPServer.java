@@ -6,28 +6,30 @@ import java.net.Socket;
 
 public class TCPServer implements Runnable {
 
-	private Server server;
-	public TCPServer(Server server) {
+	public TCPServer() {
 		super();
-		this.server = server;
+
 	}
 
 	@Override
 	public void run() {
-		ServerSocket welcomeSocket;
+		ServerSocket serversocket;
 		try {
-			welcomeSocket = new ServerSocket(2554);
+			serversocket = new ServerSocket(6458);
+			System.out.println("Server tcp socket started " + serversocket);
 
-		Socket socket = welcomeSocket.accept();
-			//from Client
-		BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
-		
-		server.addClient(socket);
-		
+			while(true){	
+				Socket socket = serversocket.accept();
+
+				BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
+
+				Server.addClient(socket);
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }

@@ -12,17 +12,17 @@ public class NewLike implements Runnable{
 
 	@Override
 	public void run() {
-		while(true){
-			BufferedReader inFromServer;
-			try {
-				inFromServer = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
+		try {
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
+
+			while(true){
+
 				String sentence = inFromServer.readLine();
 				System.out.println(sentence);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+
 			}
-			
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 

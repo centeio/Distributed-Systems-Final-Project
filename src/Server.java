@@ -33,6 +33,9 @@ public class Server {
 			return;
 		}
 		clients = new ArrayList<Socket>();
+		TCPServer tcpserver = new TCPServer();
+		new Thread(tcpserver).start();
+		
 		setup();		
 		//HTTP Server
 		final String IP = args[0];		final int PORT = Integer.parseInt(args[1]);
@@ -159,7 +162,7 @@ public class Server {
 		}
 	}
 
-	public void addClient(Socket socket) {
+	public static void addClient(Socket socket) {
 		clients.add(socket);
 		
 	}

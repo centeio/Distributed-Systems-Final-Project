@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 
 
@@ -64,7 +65,7 @@ public class ServerHandler implements HttpHandler
 				}
 				break;
 			case "locate":
-				filename = Server.file_mapping.get(info.get("location")).getKey();
+				filename = ((SimpleEntry<String, Integer>) Server.file_mapping.get(info.get("location"))).getKey();
 				if(Server.chunks_mapping.get(filename) == null){
 					ArrayList<Chunk> chunks = divideFileIntoChunks(filename);
 					Server.chunks_mapping.put(filename, chunks);

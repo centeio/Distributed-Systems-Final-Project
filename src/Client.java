@@ -71,7 +71,7 @@ public class Client implements NotificationListener {
 
 
 	private void startConnection() throws UnknownHostException, IOException {
-		this.socket = new Socket("localhost", 2554);
+		this.socket = new Socket("127.0.0.1", 6458);
 		DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
 		outToServer.writeBytes("\n");
 		NewLike newLike = new NewLike(this);
@@ -129,6 +129,11 @@ public boolean locationupdated() {
 
 public void setLocationupdated(boolean locationupdated) {
 	this.locationupdated = locationupdated;
+}
+
+public void addAction(ArrayList<String> action) {
+	actions.add(action);
+	
 }
 
 //TODO Thread para receber notificaes e ficheiros	
