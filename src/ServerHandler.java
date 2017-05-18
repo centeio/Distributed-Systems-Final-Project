@@ -8,11 +8,14 @@ import java.net.MulticastSocket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import javax.xml.bind.DatatypeConverter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class ServerHandler implements HttpHandler 
 {
@@ -28,6 +31,7 @@ public class ServerHandler implements HttpHandler
 		try {
 			JSONObject info = parseIntoJSON(t);
 			JSONObject json = new JSONObject();
+			String filename;
 			
 			System.out.println(info.get("type"));
 
@@ -37,21 +41,37 @@ public class ServerHandler implements HttpHandler
 				 * alterar ficheiro JSON do servidor NUNO*/ 
 				json = new JSONObject();
 				json.put("type", "registered");
-				json.put("file", info.get("fileid"));
+				json.put("file", info.get("filename"));
 
 				response = json.toString();
 
 				break;
 			case "locate":
 				//TODO INES get actual number of chunks
-				String filename = Server.file_mapping.get(info.get("location")).keySet().iterator().next();
+				filename = Server.file_mapping.get(info.get("location")).keySet().iterator().next();
 				int noChunks = 1; //divideFileIntoChunks(filename).size();
 				
-				//TODO INES format response JSON {"type":"getInfo", "fileid":value, "noChunk":value}
+				//format response JSON {"type":"getInfo", "fileid":value, "noChunk":value}
 				json = new JSONObject();
 				json.put("type", "getInfo");
-				json.put("fileid", filename);
+				json.put("filename", filename);
 				json.put("noChunk", noChunks);
+				
+				response = json.toString();
+				break;
+			case "getChunk":
+				filename = info.getString("filename");
+				int chunkNo = info.getInt("chunkNo");
+				
+				//TODO INES get actual chunk data
+				byte data[] = ("This is the data").getBytes();
+				
+				//format response JSON {"type":"getInfo", "filename":value, "chunkNo":value, "data":value}
+				json = new JSONObject();
+				json.put("type", "returnChunk");
+				json.put("filename", filename);
+				json.put("chunkNo", chunkNo);
+				json.put("data", data.toString());
 				
 				response = json.toString();
 				break;

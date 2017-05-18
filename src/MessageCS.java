@@ -63,7 +63,7 @@ public class MessageCS implements Message{
 		JSONObject info = new JSONObject();
 
 		info.put("type", action);
-		info.put("fileid", fileid);
+		info.put("filename", fileid);
 
 		return info.toString();
 

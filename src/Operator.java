@@ -3,7 +3,11 @@ import java.net.MulticastSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.bind.DatatypeConverter;
+
 import org.json.JSONObject;
+
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class Operator implements Runnable{
 	private Client c;
@@ -36,7 +40,7 @@ public class Operator implements Runnable{
 					JSONObject info = new JSONObject();
 
 					info.put("type", "getChunk");
-					info.put("fileid", gc.getFilename());
+					info.put("filename", gc.getFilename());
 					info.put("chunkNo", gc.getChunkNo());
 
 					JSONObject response = Unicast.sendPOST(info.toString());
@@ -46,19 +50,21 @@ public class Operator implements Runnable{
 					// quando recebe, SE NAO EXISTIR coloca em array de ficheiro filename ConcurrentHashMap<String filename,Map<int no, Chunks>>
 					HashMap<Integer, Chunk> chunks = c.files.get(gc.getFilename());
 					
-					if(chunks != null && chunks.get(gc.getChunkNo()) == null){			
-						chunks.put(gc.getChunkNo(), new Chunk(gc.getChunkNo(), gc.getFilename(), response.getString("data").getBytes()));
-					}
-					
-					// se length do Map do filename == a nochunks cria new Restore(filename)
-					if(chunks.size() == gc.getNoChunks()){
-						//Transform Map into Array
-						ArrayList<Chunk> chunksArray = new ArrayList<Chunk>();
-						for(int i = 0; i < gc.getNoChunks(); i++){
-							chunksArray.add(chunks.get(i));
+					if(chunks != null){
+						if(chunks.get(gc.getChunkNo()) == null){			
+							chunks.put(gc.getChunkNo(), new Chunk(gc.getChunkNo(), gc.getFilename(), response.getString("data").getBytes()));
 						}
-						
-						c.queue.put(new Restore(chunksArray));
+					
+						// se length do Map do filename == a nochunks cria new Restore(filename)
+						if(chunks.size() == gc.getNoChunks()){
+							//Transform Map into Array
+							ArrayList<Chunk> chunksArray = new ArrayList<Chunk>();
+							for(int i = 0; i < gc.getNoChunks(); i++){
+								chunksArray.add(chunks.get(i));
+							}
+							
+							c.queue.put(new Restore(chunksArray));
+						}
 					}
 					
 				}else if(protocol instanceof Restore){ //Client receiving file from client
