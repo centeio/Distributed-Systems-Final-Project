@@ -30,6 +30,7 @@ public class Client implements NotificationListener {
 
 	public Client() {
 		super();
+		
 		locator = new Locator(this);
 		setUnicast(new Unicast(this));
 		actions = new PriorityQueue<ArrayList<String>>();

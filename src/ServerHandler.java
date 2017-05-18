@@ -8,14 +8,12 @@ import java.net.MulticastSocket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import javax.xml.bind.DatatypeConverter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class ServerHandler implements HttpHandler 
 {
@@ -31,7 +29,7 @@ public class ServerHandler implements HttpHandler
 		try {
 			JSONObject info = parseIntoJSON(t);
 			JSONObject json = new JSONObject();
-			String filename;
+			String filename, username;
 			
 			System.out.println(info.get("type"));
 
@@ -39,9 +37,22 @@ public class ServerHandler implements HttpHandler
 			case "like":
 				/*guardar informacao de like e iniciar notificacao para restantes clientes NUNO
 				 * alterar ficheiro JSON do servidor NUNO*/ 
+				username = info.getString("username");
+				filename = info.getString("filename");
+				
 				json = new JSONObject();
-				json.put("type", "registered");
-				json.put("file", info.get("filename"));
+				
+				if(Server.client_mapping.get(username).contains(filename)){
+					//already has a like
+					json.put("type", "like");
+					json.put("value", false);
+				}else{
+					//new like
+					json.put("type", "like");
+					json.put("value", true);
+					
+					Server.addLike(username, filename);
+				}
 
 				response = json.toString();
 
@@ -49,9 +60,13 @@ public class ServerHandler implements HttpHandler
 			case "locate":
 				//TODO INES get actual number of chunks
 				filename = Server.file_mapping.get(info.get("location")).keySet().iterator().next();
-				int noChunks = 1; //divideFileIntoChunks(filename).size();
+				if(Server.chunks_mapping.get(filename) == null){
+					ArrayList<Chunk> chunks = divideFileIntoChunks(filename);
+					Server.chunks_mapping.put(filename, chunks);
+				}
+				int noChunks = Server.chunks_mapping.get(filename).size();
 				
-				//format response JSON {"type":"getInfo", "fileid":value, "noChunk":value}
+				//format response JSON {"type":"getInfo", "filename":value, "noChunk":value}
 				json = new JSONObject();
 				json.put("type", "getInfo");
 				json.put("filename", filename);
@@ -116,7 +131,7 @@ public class ServerHandler implements HttpHandler
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 		
 		try{
-			File file = new File(name);
+			File file = new File("../database/files/" + name);
 
 			FileInputStream stream = new FileInputStream(file);
 			MulticastSocket socket = new MulticastSocket();

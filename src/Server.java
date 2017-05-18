@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
@@ -16,17 +17,24 @@ public class Server {
 	//username = array_likes
 	static Map<String, ArrayList<String>> client_mapping = new ConcurrentHashMap<String, ArrayList<String>>();
 	
-	//location = <filename, array_usernames>
-	static Map<String, Map<String, ArrayList<String>>> file_mapping = new ConcurrentHashMap<String, Map<String, ArrayList<String>>> ();
-
+	//location = <filename, numChunks>
+	static Map<String, Map<String, Integer>> file_mapping = new ConcurrentHashMap<String, Map<String, Integer>> ();
+	
+	//filename = ArrayList<Chunk>
+	static Map<String, ArrayList<Chunk>> chunks_mapping = new ConcurrentHashMap<String, ArrayList<Chunk>>();
+	
 	public static void main(String[] args) {
-		setup();
-				Server s = new Server();		//HTTP Server
-		final String IP = "127.0.0.1";		final int PORT = 8000;
-		try {
+		if(args.length < 2){
+			System.out.println("Usage Server <ip address> <port>");
+			return;
+		}
+		setup();		
+		//HTTP Server
+		final String IP = args[0];		final int PORT = Integer.parseInt(args[1]);
+		try {
 			InetSocketAddress inet = new InetSocketAddress(IP, PORT);
 			HttpServer server = HttpServer.create(inet, 0);			server.createContext("/SDIS", new ServerHandler());
-			server.setExecutor(Executors.newCachedThreadPool());
+			server.setExecutor(Executors.newCachedThreadPool());	
 		    server.start();
 		} catch (IOException e) {	
 			e.printStackTrace();
@@ -39,7 +47,7 @@ public class Server {
 	}
 
 	private static void loadClients() {
-		File json = new File("database/server_clients.json");
+		File json = new File("../database/server_clients.json");
 
 		try {
 			byte[] data = Files.readAllBytes(json.toPath());
@@ -65,7 +73,6 @@ public class Server {
 				}	
 				
 			}				
-			System.out.println(client_mapping.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
@@ -74,7 +81,7 @@ public class Server {
 	}
 
 	private static void loadFiles() {
-		File json = new File("database/server_files.json");
+		File json = new File("../database/server_files.json");
 
 		try {
 			byte[] data = Files.readAllBytes(json.toPath());
@@ -91,23 +98,59 @@ public class Server {
 				
 				String filename = child.getString("name");
 				String fileLocation = child.getString("location");
-				JSONArray arr = child.getJSONArray("likes");
+				int numChunks = child.getInt("numChunks");
 				
-				Map<String, ArrayList<String>> file_like = new ConcurrentHashMap<String, ArrayList<String>>();
-				file_like.put(filename, new ArrayList<String>());
+				Map<String,Integer> map = new ConcurrentHashMap<String,Integer>();
+				map.put(filename, numChunks);			
 				
-				for(int j = 0; j < arr.length(); j++){
-					String username = arr.get(j).toString();
-					file_like.get(filename).add(username);
-				}				
-				
-				file_mapping.put(fileLocation, file_like);
+				file_mapping.put(fileLocation, map);
 			}	
 			
-			System.out.println(file_mapping.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void addLike(String username, String filename){
+		client_mapping.get(username).add(filename);
+		
+		File json = new File("../database/server_clients.json");
+		
+		try{
+			byte[] data = Files.readAllBytes(json.toPath());
+			String file_string = new String(data);
+			
+			JSONObject json_obj = new JSONObject(file_string);
+			
+			JSONObject server_clients = json_obj.getJSONObject("server_clients");
+			JSONArray clients = server_clients.getJSONArray("clients");
+			
+			for(int i = 0; i < clients.length(); i++){
+				JSONObject info = clients.getJSONObject(i);
+				if(info.get("username").equals(username)){
+					JSONArray arr = info.getJSONArray("likes");
+					boolean contains = false;
+					
+					for(int j = 0; j < arr.length(); j++){
+						if(arr.get(j).equals(filename)){
+							contains = true;
+						}
+					}
+					
+					if(!contains){
+						arr.put(filename);
+					}
+				}
+			}
+			
+			FileWriter json_file = new FileWriter(json);
+			json_obj.write(json_file);
+			json_file.close();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

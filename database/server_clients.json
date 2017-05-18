@@ -1,12 +1,1 @@
-{"server_clients": {
-    "clients" : [
-        {"username": "Jose",
-        "likes":["test_file1.jpg"]},
-        {"username": "Maria",
-        "likes":["test_file1.jpg", "test_file2.jpg"]},
-        {"username": "Joao",
-        "likes":["test_file3.jpg"]},
-        {"username": "Joana",
-        "likes":[]}
-    ]
-}}
+{"server_clients":{"clients":[{"username":"Jose","likes":["test_file1.pdf","test_file3.pdf"]},{"username":"Maria","likes":["test_file1.pdf","test_file2.pdf"]},{"username":"Joao","likes":["test_file3.pdf"]},{"username":"Joana","likes":[]}]}}
