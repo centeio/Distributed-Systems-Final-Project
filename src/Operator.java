@@ -33,10 +33,8 @@ public class Operator implements Runnable{
 					 * If Download protocol chunk is null, then create GetChunk protocol for each of the chunks
 					 * and put it in the queue
 					 */
-					if(d.getChunk() == null){
-						for(int i = 0; i < d.getNumChunks(); i++){
-							this.c.queue.put(new GetChunk(i, d.getChunk().getFilename(), d.getNumChunks()));
-						}
+					for(int i = 0; i < d.getNumChunks(); i++){
+						this.c.queue.put(new GetChunk(i, d.getFilename(), d.getNumChunks()));
 					}
 				}else if(protocol instanceof GetChunk){
 					GetChunk gc = (GetChunk) protocol;

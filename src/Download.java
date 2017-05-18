@@ -1,6 +1,6 @@
 //por chunk
 public class Download {
-    private Chunk chunk;
+    private String filename;
     private int numChunks;
     private String message = "check";
 
@@ -8,23 +8,15 @@ public class Download {
     	
     }
 
-    public Download(Chunk c, int numChunks){
-        this.chunk = c;
+    public Download(String filename, int numChunks){
+        this.filename = filename;
         this.numChunks = numChunks;
     }
-
-    public Chunk getChunk() {
-        return chunk;
-    }
-
-    public void setChunk(Chunk chunks) {
-        this.chunk = chunks;
-    }
-
+    
     @Override
     public String toString() {
-        return "Backup{" +
-                "chunk=" + this.chunk.toString() +
+        return "Download{" +
+                "filename=" + this.filename.toString() +
                 '}';
     }
 
@@ -42,6 +34,14 @@ public class Download {
 
 	public void setNumChunks(int numChunks) {
 		this.numChunks = numChunks;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
 
