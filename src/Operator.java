@@ -36,6 +36,8 @@ public class Operator implements Runnable{
 					for(int i = 0; i < d.getNumChunks(); i++){
 						this.c.queue.put(new GetChunk(i, d.getFilename(), d.getNumChunks()));
 					}
+					
+					c.files.put(d.getFilename(), new HashMap<Integer,Chunk>());
 				}else if(protocol instanceof GetChunk){
 					GetChunk gc = (GetChunk) protocol;
 					//NO CLIENTE
@@ -62,6 +64,9 @@ public class Operator implements Runnable{
 						if(chunks.size() == gc.getNoChunks()){
 							c.queue.put(new Restore(gc.getFilename()));
 						}
+					}
+					else{
+						System.out.println("Error Operator line 67");
 					}
 					
 				}else if(protocol instanceof Restore){ //Client receiving file from client

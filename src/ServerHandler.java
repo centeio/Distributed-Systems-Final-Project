@@ -85,7 +85,8 @@ public class ServerHandler implements HttpHandler
 				int chunkNo = info.getInt("chunkNo");
 				
 				//TODO INES get actual chunk data
-				byte data[] = ("This is the data").getBytes();
+				byte data[] = Server.chunks_mapping.get(filename).get(chunkNo).getData();
+				System.out.println(data);
 				
 				//format response JSON {"type":"getInfo", "filename":value, "chunkNo":value, "data":value}
 				json = new JSONObject();
