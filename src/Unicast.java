@@ -62,7 +62,7 @@ public class Unicast {
 		//Send JSON
 		con.setDoOutput(true);
 		con.setDoInput(true);
-		con.setRequestProperty("Content-Type", "charset=UTF-8");
+		con.setRequestProperty("Content-Type", "charset=ISO-8859-1");
 	
 		try{
 		

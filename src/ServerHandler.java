@@ -120,7 +120,7 @@ public class ServerHandler implements HttpHandler
 		InputStream is = t.getRequestBody();
 		is.read(rbuf);
 
-		String result = new String(rbuf, StandardCharsets.UTF_8).trim();
+		String result = new String(rbuf, StandardCharsets.ISO_8859_1).trim();
 		
 		System.out.println(result);
 

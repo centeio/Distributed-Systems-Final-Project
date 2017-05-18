@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.MulticastSocket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -56,8 +57,17 @@ public class Operator implements Runnable{
 					HashMap<Integer, Chunk> chunks = c.files.get(gc.getFilename());
 					
 					if(chunks != null){
-						if(chunks.get(gc.getChunkNo()) == null){			
-							chunks.put(gc.getChunkNo(), new Chunk(gc.getChunkNo(), gc.getFilename(), response.getString("data").getBytes()));
+						if(chunks.get(gc.getChunkNo()) == null){	
+							String strData = response.getString("data");
+							System.out.println("Operator line 63: " + strData);
+							
+							byte data[] = strData.trim().getBytes("ISO-8859-1");
+							Chunk c = new Chunk(gc.getChunkNo(), gc.getFilename(), data);
+							
+							System.out.println("Operator line 66: " + data);
+							System.out.println("");
+							
+							chunks.put(gc.getChunkNo(), c);
 						}
 					
 						// se length do Map do filename == a nochunks cria new Restore(filename)
@@ -91,64 +101,6 @@ public class Operator implements Runnable{
 	}
 
 	/**
-	 * Divides a file into an array of chunks with 64KB of size.
-	 * Algorithm based on the following StackOverflow question/answer.
-	 * http://stackoverflow.com/questions/4431945/split-and-join-back-a-binary-file-in-java
-	 * @param name Name of the file
-	 */
-	public void divideFileIntoChunks(String name){
-		try{
-			File file = new File(name);
-
-			this.chunks = new ArrayList<Chunk>();
-
-			FileInputStream stream = new FileInputStream(file);
-			MulticastSocket socket = new MulticastSocket();
-
-			byte[] chunkData;
-			long filelength = file.length();
-			int chunkMaxSize = 1000 * 64;
-			int readLength = chunkMaxSize;
-			int counter = 1;
-
-			while(filelength > 0){
-				if(filelength < chunkMaxSize){
-					readLength = (int)filelength;
-				}
-
-				chunkData = new byte[readLength];
-
-				int bytesRead = stream.read(chunkData, 0, readLength);
-				filelength -= bytesRead;
-
-				if(chunkData.length != bytesRead){
-					System.out.println("Error reading chunk");
-					break;
-				}
-
-				Chunk c = new Chunk(counter, name, chunkData);
-
-				counter++;
-				this.chunks.add(c);
-			}
-
-			stream.close();
-			socket.close();
-			
-		}catch(FileNotFoundException e){
-			System.out.println("File " + name + " not found");
-			return;
-		}catch(SecurityException e){
-			System.out.println("Denied reading file " + name);
-			return;
-		} catch (IOException e) {
-			System.out.println("Error closing stream of file " + name);
-			return;
-		}
-		
-	}
-
-	/**
 	 * Restores a file from an array of chunks.
 	 * Algorithm based on the following StackOverflow question/answer.
 	 * http://stackoverflow.com/questions/4431945/split-and-join-back-a-binary-file-in-java
@@ -162,6 +114,8 @@ public class Operator implements Runnable{
 		try{
 			restoredFile = new FileOutputStream(file, true);
 			for(int i = 0; i < this.c.files.get(filename).size(); i++){
+				System.out.println("Operator lin 107: " + this.c.files.get(filename).get(i).getData());
+				
 				byte[] fileData = this.c.files.get(filename).get(i).getData();
 	
 				restoredFile.write(fileData);
