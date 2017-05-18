@@ -64,8 +64,7 @@ public class ServerHandler implements HttpHandler
 				}
 				break;
 			case "locate":
-				//TODO INES get actual number of chunks
-				filename = Server.file_mapping.get(info.get("location")).keySet().iterator().next();
+				filename = Server.file_mapping.get(info.get("location")).getKey();
 				if(Server.chunks_mapping.get(filename) == null){
 					ArrayList<Chunk> chunks = divideFileIntoChunks(filename);
 					Server.chunks_mapping.put(filename, chunks);

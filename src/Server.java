@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,7 +20,7 @@ public class Server {
 	static Map<String, ArrayList<String>> client_mapping = new ConcurrentHashMap<String, ArrayList<String>>();
 	
 	//location = <filename, numChunks>
-	static Map<String, Map<String, Integer>> file_mapping = new ConcurrentHashMap<String, Map<String, Integer>> ();
+	static Map<String, SimpleEntry<String, Integer>> file_mapping = new ConcurrentHashMap<String, SimpleEntry<String, Integer>> ();
 	
 	//filename = ArrayList<Chunk>
 	static Map<String, ArrayList<Chunk>> chunks_mapping = new ConcurrentHashMap<String, ArrayList<Chunk>>();
@@ -104,10 +105,9 @@ public class Server {
 				String fileLocation = child.getString("location");
 				int numChunks = child.getInt("numChunks");
 				
-				Map<String,Integer> map = new ConcurrentHashMap<String,Integer>();
-				map.put(filename, numChunks);			
+				SimpleEntry<String,Integer> entry = new SimpleEntry<String,Integer>(filename, numChunks);			
 				
-				file_mapping.put(fileLocation, map);
+				file_mapping.put(fileLocation, entry);
 			}	
 			
 		} catch (IOException e) {
