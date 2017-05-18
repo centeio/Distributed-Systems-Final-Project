@@ -26,13 +26,19 @@ public class Operator implements Runnable{
 				Object protocol = this.c.queue.take();
 
 				if(protocol instanceof Download){
-					System.out.println(((Download) protocol).getMessage());
-					//NO CLIENTE
-					/*if(protocol.chunk() == null) NUNO
-					 * ciclo com até i=nochunks
-					 *   novo processo de 0 a nochunks para pedir chunk a Server (com filename e filelength)
-					 *   colocar processo em client.queue
+					Download d = (Download) protocol;
+					
+					/*
+					 * Download initiator
+					 * 
+					 * If Download protocol chunk is null, then create GetChunk protocol for each of the chunks
+					 * and put it in the queue
 					 */
+					if(d.getChunk() == null){
+						for(int i = 0; i < d.getNumChunks(); i++){
+							this.c.queue.put(new GetChunk(i, d.getChunk().getFilename(), d.getNumChunks()));
+						}
+					}
 				}else if(protocol instanceof GetChunk){
 					GetChunk gc = (GetChunk) protocol;
 					//NO CLIENTE
@@ -148,15 +154,15 @@ public class Operator implements Runnable{
 	 * Algorithm based on the following StackOverflow question/answer.
 	 * http://stackoverflow.com/questions/4431945/split-and-join-back-a-binary-file-in-java
 	 */
-	public void restoreFile(){
-		String name = this.chunks.get(0).getFilename();
+	public void restoreFile(ArrayList<Chunk> chunks){
+		String name = chunks.get(0).getFilename();
 		File file = new File(name);
 
 		FileOutputStream restoredFile;
 
 		try{
 			restoredFile = new FileOutputStream(file, true);
-			for(Chunk c: this.chunks){
+			for(Chunk c: chunks){
 				byte[] fileData = c.getData();
 
 				restoredFile.write(fileData);
