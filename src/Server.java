@@ -31,10 +31,10 @@ public class Server {
 		setup();		
 		//HTTP Server
 		final String IP = args[0];		final int PORT = Integer.parseInt(args[1]);
-		try {
+		try {
 			InetSocketAddress inet = new InetSocketAddress(IP, PORT);
 			HttpServer server = HttpServer.create(inet, 0);			server.createContext("/SDIS", new ServerHandler());
-			server.setExecutor(Executors.newCachedThreadPool());
+			server.setExecutor(Executors.newCachedThreadPool());	
 		    server.start();
 		} catch (IOException e) {	
 			e.printStackTrace();
@@ -73,7 +73,6 @@ public class Server {
 				}	
 				
 			}				
-			System.out.println(client_mapping.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
@@ -107,7 +106,6 @@ public class Server {
 				file_mapping.put(fileLocation, map);
 			}	
 			
-			System.out.println(file_mapping.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
@@ -124,18 +122,31 @@ public class Server {
 			byte[] data = Files.readAllBytes(json.toPath());
 			String file_string = new String(data);
 			
-			JSONObject server_clients = new JSONObject(file_string);
+			JSONObject json_obj = new JSONObject(file_string);
+			
+			JSONObject server_clients = json_obj.getJSONObject("server_clients");
 			JSONArray clients = server_clients.getJSONArray("clients");
 			
 			for(int i = 0; i < clients.length(); i++){
 				JSONObject info = clients.getJSONObject(i);
 				if(info.get("username").equals(username)){
-					info.getJSONArray(username).put(filename);
+					JSONArray arr = info.getJSONArray("likes");
+					boolean contains = false;
+					
+					for(int j = 0; j < arr.length(); j++){
+						if(arr.get(j).equals(filename)){
+							contains = true;
+						}
+					}
+					
+					if(!contains){
+						arr.put(filename);
+					}
 				}
 			}
 			
 			FileWriter json_file = new FileWriter(json);
-			json_file.write(server_clients.toString());
+			json_obj.write(json_file);
 			json_file.close();
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -49,7 +49,7 @@ public class ServerHandler implements HttpHandler
 				}else{
 					//new like
 					json.put("type", "like");
-					json.put("value", false);
+					json.put("value", true);
 					
 					Server.addLike(username, filename);
 				}
