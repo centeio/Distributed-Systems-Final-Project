@@ -1,11 +1,11 @@
 {"server_clients": {
     "clients" : [
         {"username": "Jose",
-        "likes":["test_file1.jpg"]},
+        "likes":["test_file1.pdf"]},
         {"username": "Maria",
-        "likes":["test_file1.jpg", "test_file2.jpg"]},
+        "likes":["test_file1.pdf", "test_file2.pdf"]},
         {"username": "Joao",
-        "likes":["test_file3.jpg"]},
+        "likes":["test_file3.pdf"]},
         {"username": "Joana",
         "likes":[]}
     ]

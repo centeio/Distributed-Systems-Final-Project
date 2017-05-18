@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
@@ -30,6 +31,7 @@ public class Client implements NotificationListener {
 
 	public Client() {
 		super();
+		
 		locator = new Locator(this);
 		setUnicast(new Unicast(this));
 		actions = new PriorityQueue<ArrayList<String>>();

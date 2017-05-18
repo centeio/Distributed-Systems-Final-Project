@@ -3,11 +3,9 @@ import java.net.MulticastSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.xml.bind.DatatypeConverter;
 
 import org.json.JSONObject;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class Operator implements Runnable{
 	private Client c;
@@ -137,6 +135,7 @@ public class Operator implements Runnable{
 
 			stream.close();
 			socket.close();
+			
 		}catch(FileNotFoundException e){
 			System.out.println("File " + name + " not found");
 			return;
@@ -147,6 +146,7 @@ public class Operator implements Runnable{
 			System.out.println("Error closing stream of file " + name);
 			return;
 		}
+		
 	}
 
 	/**

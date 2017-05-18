@@ -16,8 +16,8 @@ public class Server {
 	//username = array_likes
 	static Map<String, ArrayList<String>> client_mapping = new ConcurrentHashMap<String, ArrayList<String>>();
 	
-	//location = <filename, array_usernames>
-	static Map<String, Map<String, ArrayList<String>>> file_mapping = new ConcurrentHashMap<String, Map<String, ArrayList<String>>> ();
+	//location = <filename, numChunks>
+	static Map<String, Map<String, Integer>> file_mapping = new ConcurrentHashMap<String, Map<String, Integer>> ();
 
 	public static void main(String[] args) {
 		setup();
@@ -39,7 +39,7 @@ public class Server {
 	}
 
 	private static void loadClients() {
-		File json = new File("database/server_clients.json");
+		File json = new File("../database/server_clients.json");
 
 		try {
 			byte[] data = Files.readAllBytes(json.toPath());
@@ -74,7 +74,7 @@ public class Server {
 	}
 
 	private static void loadFiles() {
-		File json = new File("database/server_files.json");
+		File json = new File("../database/server_files.json");
 
 		try {
 			byte[] data = Files.readAllBytes(json.toPath());
@@ -91,17 +91,12 @@ public class Server {
 				
 				String filename = child.getString("name");
 				String fileLocation = child.getString("location");
-				JSONArray arr = child.getJSONArray("likes");
+				int numChunks = child.getInt("numChunks");
 				
-				Map<String, ArrayList<String>> file_like = new ConcurrentHashMap<String, ArrayList<String>>();
-				file_like.put(filename, new ArrayList<String>());
+				Map<String,Integer> map = new ConcurrentHashMap<String,Integer>();
+				map.put(filename, numChunks);			
 				
-				for(int j = 0; j < arr.length(); j++){
-					String username = arr.get(j).toString();
-					file_like.get(filename).add(username);
-				}				
-				
-				file_mapping.put(fileLocation, file_like);
+				file_mapping.put(fileLocation, map);
 			}	
 			
 			System.out.println(file_mapping.toString());
