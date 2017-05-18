@@ -2,7 +2,7 @@ import java.io.*;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONObject;
 
@@ -10,6 +10,7 @@ import org.json.JSONObject;
 public class Operator implements Runnable{
 	private Client c;
 	private ArrayList<Chunk> chunks;
+	private ConcurrentHashMap<String, ArrayList<Chunk>> files;
 
 	public Operator(Client c) {
 		super();
@@ -67,14 +68,16 @@ public class Operator implements Runnable{
 								chunksArray.add(chunks.get(i));
 							}
 							
-							c.queue.put(new Restore(chunksArray));
+							//c.queue.put(new Restore(chunksArray));
 						}
 					}
 					
 				}else if(protocol instanceof Restore){ //Client receiving file from client
 					//NO CLIENTE 
 					//TODO alterar funcao para map NUNO
-
+					Restore r = (Restore) protocol;
+					
+					restoreFile(r.getFilename());
 				}
 
 			} catch (Exception e) {
@@ -154,15 +157,15 @@ public class Operator implements Runnable{
 	 * Algorithm based on the following StackOverflow question/answer.
 	 * http://stackoverflow.com/questions/4431945/split-and-join-back-a-binary-file-in-java
 	 */
-	public void restoreFile(ArrayList<Chunk> chunks){
-		String name = chunks.get(0).getFilename();
+	public void restoreFile(String filename){
+		String name = filename;
 		File file = new File(name);
 
 		FileOutputStream restoredFile;
 
 		try{
 			restoredFile = new FileOutputStream(file, true);
-			for(Chunk c: chunks){
+			for(Chunk c: files.get(filename)){
 				byte[] fileData = c.getData();
 
 				restoredFile.write(fileData);

@@ -29,7 +29,7 @@ public class ServerHandler implements HttpHandler
 		try {
 			JSONObject info = parseIntoJSON(t);
 			JSONObject json = new JSONObject();
-			String filename;
+			String filename, username;
 			
 			System.out.println(info.get("type"));
 
@@ -37,9 +37,22 @@ public class ServerHandler implements HttpHandler
 			case "like":
 				/*guardar informacao de like e iniciar notificacao para restantes clientes NUNO
 				 * alterar ficheiro JSON do servidor NUNO*/ 
+				username = info.getString("username");
+				filename = info.getString("filename");
+				
 				json = new JSONObject();
-				json.put("type", "registered");
-				json.put("file", info.get("filename"));
+				
+				if(Server.client_mapping.get(username).contains(filename)){
+					//already has a like
+					json.put("type", "like");
+					json.put("value", false);
+				}else{
+					//new like
+					json.put("type", "like");
+					json.put("value", false);
+					
+					Server.addLike(username, filename);
+				}
 
 				response = json.toString();
 

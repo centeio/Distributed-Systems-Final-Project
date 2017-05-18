@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
@@ -103,6 +104,35 @@ public class Server {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void addLike(String username, String filename){
+		client_mapping.get(username).add(filename);
+		
+		File json = new File("../database/server_clients.json");
+		
+		try{
+			byte[] data = Files.readAllBytes(json.toPath());
+			String file_string = new String(data);
+			
+			JSONObject server_clients = new JSONObject(file_string);
+			JSONArray clients = server_clients.getJSONArray("clients");
+			
+			for(int i = 0; i < clients.length(); i++){
+				JSONObject info = clients.getJSONObject(i);
+				if(info.get("username").equals(username)){
+					info.getJSONArray(username).put(filename);
+				}
+			}
+			
+			FileWriter json_file = new FileWriter(json);
+			json_file.write(server_clients.toString());
+			json_file.close();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
