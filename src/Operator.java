@@ -62,19 +62,11 @@ public class Operator implements Runnable{
 					
 						// se length do Map do filename == a nochunks cria new Restore(filename)
 						if(chunks.size() == gc.getNoChunks()){
-							//Transform Map into Array
-							ArrayList<Chunk> chunksArray = new ArrayList<Chunk>();
-							for(int i = 0; i < gc.getNoChunks(); i++){
-								chunksArray.add(chunks.get(i));
-							}
-							
-							//c.queue.put(new Restore(chunksArray));
+							c.queue.put(new Restore(gc.getFilename()));
 						}
 					}
 					
 				}else if(protocol instanceof Restore){ //Client receiving file from client
-					//NO CLIENTE 
-					//TODO alterar funcao para map NUNO
 					Restore r = (Restore) protocol;
 					
 					restoreFile(r.getFilename());
@@ -165,9 +157,9 @@ public class Operator implements Runnable{
 
 		try{
 			restoredFile = new FileOutputStream(file, true);
-			for(Chunk c: files.get(filename)){
-				byte[] fileData = c.getData();
-
+			for(int i = 0; i < this.c.files.get(filename).size(); i++){
+				byte[] fileData = this.c.files.get(filename).get(i).getData();
+	
 				restoredFile.write(fileData);
 				restoredFile.flush();
 			}
