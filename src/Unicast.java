@@ -45,9 +45,6 @@ public class Unicast {
 			response.append(inputLine);
 		}
 		in.close();
-
-		//print result
-		System.out.println("Got here " + response.toString());
 		
 		JSONObject info = new JSONObject(response.toString());
 		

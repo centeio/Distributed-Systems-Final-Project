@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.MulticastSocket;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,15 +58,9 @@ public class Operator implements Runnable{
 					HashMap<Integer, Chunk> chunks = c.files.get(gc.getFilename());
 					
 					if(chunks != null){
-						if(chunks.get(gc.getChunkNo()) == null){	
-							String strData = response.getString("data");
-							System.out.println("Operator line 63: " + strData);
-							
-							byte data[] = strData.trim().getBytes("ISO-8859-1");
+						if(chunks.get(gc.getChunkNo()) == null){						
+							byte data[] = response.getString("data").trim().getBytes("ISO-8859-1");
 							Chunk c = new Chunk(gc.getChunkNo(), gc.getFilename(), data);
-							
-							System.out.println("Operator line 66: " + data);
-							System.out.println("");
 							
 							chunks.put(gc.getChunkNo(), c);
 						}
@@ -106,15 +101,19 @@ public class Operator implements Runnable{
 	 * http://stackoverflow.com/questions/4431945/split-and-join-back-a-binary-file-in-java
 	 */
 	public void restoreFile(String filename){
-		String name = filename;
-		File file = new File(name);
+		File file = new File(filename);
+		try {
+			boolean result = Files.deleteIfExists(file.toPath());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		FileOutputStream restoredFile;
 
 		try{
 			restoredFile = new FileOutputStream(file, true);
 			for(int i = 0; i < this.c.files.get(filename).size(); i++){
-				System.out.println("Operator lin 107: " + this.c.files.get(filename).get(i).getData());
 				
 				byte[] fileData = this.c.files.get(filename).get(i).getData();
 	
@@ -124,13 +123,13 @@ public class Operator implements Runnable{
 
 			restoredFile.close();
 		}catch(FileNotFoundException e){
-			System.out.println("File " + name + " not found");
+			System.out.println("File " + filename + " not found");
 			return;
 		}catch(SecurityException e){
-			System.out.println("Denied reading file " + name);
+			System.out.println("Denied reading file " + filename);
 			return;
 		} catch (IOException e) {
-			System.out.println("Error closing stream of file " + name);
+			System.out.println("Error closing stream of file " + filename);
 			e.printStackTrace();
 		}
 	}
