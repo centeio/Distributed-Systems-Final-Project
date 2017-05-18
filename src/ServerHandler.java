@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MulticastSocket;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -55,7 +56,12 @@ public class ServerHandler implements HttpHandler
 				}
 
 				response = json.toString();
-
+				
+				String message = username + " likes spot " + filename;
+				for(Socket s : Server.clients){
+					TCPSender sender = new TCPSender(s,message);
+					new Thread(sender).start();
+				}
 				break;
 			case "locate":
 				//TODO INES get actual number of chunks

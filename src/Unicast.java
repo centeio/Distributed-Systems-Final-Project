@@ -18,71 +18,23 @@ public class Unicast {
 		this.client = client;
 
 	}
-	
-/*	private static void sendGET(String plate) throws MalformedURLException, IOException, ProtocolException, JSONException {
-		URL url = new URL ("http://127.0.0.1:8000/SDIS?plate=" + plate);
 
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-		// optional default is GET
-		con.setRequestMethod("GET");
-		//Send JSON
-		con.setDoOutput(true);
-		con.setDoInput(true);
-		con.setRequestProperty("Content-Type", "charset=UTF-8");
-
-		int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'GET' request to URL : " + url);
-		System.out.println("Response Code : " + responseCode);
-
-		BufferedReader in = new BufferedReader(
-		        new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-		
-		//print result
-		JSONObject info = new JSONObject(response.toString());
-		try {
-			info = info.getJSONObject("register");
-			System.out.println(info.getString("plate") + " belongs to " + info.getString("owner"));				
-				
-		} catch (JSONException e) {
-			try {
-				info = info.getJSONObject("error");
-				System.out.println("ERROR: " + info.getString("msg"));
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-	}
-*/
 	public static JSONObject sendPOST(String message) throws MalformedURLException, IOException, ProtocolException, JSONException {
-		URL url = new URL ("http://127.0.0.1:8000/SDIS");
-
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-		con.setRequestMethod("POST");
-		//Send JSON
-		con.setDoOutput(true);
-		con.setDoInput(true);
-		con.setRequestProperty("Content-Type", "charset=UTF-8");
-	
 		
-		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-
-		wr.write(message);
-		wr.flush();
-		wr.close();
-
-		int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'POST' request to URL : " + url);
-		System.out.println("Response Code : " + responseCode);
+		URL url = new URL ("http://127.0.0.1:8000/SDIS");
+		
+		HttpURLConnection con = getValidConnection(message, url);
+		
+		if(con == null){
+			//Try backup
+			url = new URL ("http://127.0.0.1:8080/SDIS");
+			
+			con = getValidConnection(message, url);
+		}
+		
+		if(con == null){
+			return new JSONObject("{error: Server not reachable");
+		}
 
 		BufferedReader in = new BufferedReader(
 		        new InputStreamReader(con.getInputStream()));
@@ -101,92 +53,35 @@ public class Unicast {
 		
 		return info;
 	}
-	
-/*	private static void sendPUT(String plate, String owner) throws MalformedURLException, IOException, ProtocolException, JSONException {
-		URL url = new URL ("http://127.0.0.1:8000/SDIS");
 
+	private static HttpURLConnection getValidConnection(String message, URL url)
+			throws IOException, ProtocolException, JSONException {
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-		con.setRequestMethod("PUT");
+		
+		con.setRequestMethod("POST");
 		//Send JSON
 		con.setDoOutput(true);
 		con.setDoInput(true);
 		con.setRequestProperty("Content-Type", "charset=UTF-8");
+	
+		try{
 		
-		//Putting JSON on it {"register":{"plate":"value","owner":"owner name"}}
-		JSONObject info   = new JSONObject();
-		JSONObject param   = new JSONObject();
-		info.put("plate", plate);
-		info.put("owner", owner);
-		param.put("register", info);
-		
-		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-
-		wr.write(param.toString());
-		wr.flush();
-		wr.close();
-
-		int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'PUT' request to URL : " + url);
-		System.out.println("Response Code : " + responseCode);
-
-		BufferedReader in = new BufferedReader(
-		        new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
+			OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+	
+			wr.write(message);
+			wr.flush();
+			wr.close();
+	
+			int responseCode = con.getResponseCode();
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Response Code : " + responseCode);
+		} catch (java.net.SocketTimeoutException e) {
+			System.out.println("Timeout!!!!!");
+			return null;
+		} catch (java.io.IOException e) {
+			System.out.println("Server Down!!!!!");
+			return null;
 		}
-		in.close();
-
-		//print result
-		info = new JSONObject(response.toString());
-		info = info.getJSONObject("success");
-		System.out.println("Created register: " + info.getString("plate") + " belongs to " + info.getString("owner"));
+		return con;
 	}
-	
-	private static void sendDELETE(String plate) throws MalformedURLException, IOException, ProtocolException, JSONException {
-		URL url = new URL ("http://127.0.0.1:8000/SDIS?plate=" + plate);
-		
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		
-		// optional default is GET
-		con.setRequestMethod("DELETE");
-		//Send JSON
-		con.setDoOutput(true);
-		con.setDoInput(true);
-		con.setRequestProperty("Content-Type", "charset=UTF-8");
-		
-		int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'DELETE' request to URL : " + url);
-		System.out.println("Response Code : " + responseCode);
-		
-		BufferedReader in = new BufferedReader(
-		        new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-		
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-		
-		//print result
-		JSONObject info = new JSONObject(response.toString());
-		try {
-			info = info.getJSONObject("register");
-			System.out.println("Deleted " + info.getString("plate") + " which belonged to " + info.getString("owner"));				
-				
-		} catch (JSONException e) {
-			try {
-				info = info.getJSONObject("error");
-				System.out.println("ERROR: " + info.getString("msg"));
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}*/
-
 }
