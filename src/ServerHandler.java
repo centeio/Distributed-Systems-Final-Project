@@ -60,9 +60,10 @@ public class ServerHandler implements HttpHandler
 			case "locate":
 				//TODO INES get actual number of chunks
 				filename = Server.file_mapping.get(info.get("location")).keySet().iterator().next();
-				int noChunks = 1; //divideFileIntoChunks(filename).size();
+				ArrayList<Chunk> chunks = divideFileIntoChunks(filename);
+				int noChunks = chunks.size();
 				
-				//format response JSON {"type":"getInfo", "fileid":value, "noChunk":value}
+				//format response JSON {"type":"getInfo", "filename":value, "noChunk":value}
 				json = new JSONObject();
 				json.put("type", "getInfo");
 				json.put("filename", filename);
@@ -127,7 +128,7 @@ public class ServerHandler implements HttpHandler
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 		
 		try{
-			File file = new File(name);
+			File file = new File("../database/files/" + name);
 
 			FileInputStream stream = new FileInputStream(file);
 			MulticastSocket socket = new MulticastSocket();
