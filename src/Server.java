@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 
+import javax.net.ssl.SSLSocket;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,14 +27,14 @@ public class Server {
 	//filename = ArrayList<Chunk>
 	static Map<String, ArrayList<Chunk>> chunks_mapping = new ConcurrentHashMap<String, ArrayList<Chunk>>();
 	
-	static ArrayList<Socket> clients;
+	static ArrayList<SSLSocket> clients;
 	
 	public static void main(String[] args) {
 		if(args.length < 2){
 			System.out.println("Usage Server <ip address> <port>");
 			return;
 		}
-		clients = new ArrayList<Socket>();
+		clients = new ArrayList<SSLSocket>();
 		TCPServer tcpserver = new TCPServer();
 		new Thread(tcpserver).start();
 		
@@ -162,7 +164,7 @@ public class Server {
 		}
 	}
 
-	public static void addClient(Socket socket) {
+	public static void addClient(SSLSocket socket) {
 		clients.add(socket);
 		
 	}

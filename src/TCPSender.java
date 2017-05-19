@@ -3,10 +3,12 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.net.ssl.SSLSocket;
+
 public class TCPSender implements Runnable{
-	private Socket socket;
+	private SSLSocket socket;
 	private String message;
-	public TCPSender(Socket socket, String message){
+	public TCPSender(SSLSocket socket, String message){
 		super();
 		this.socket = socket;
 	}

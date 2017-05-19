@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 
+import javax.net.ssl.SSLSocket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +60,7 @@ public class ServerHandler implements HttpHandler
 				response = json.toString();
 				
 				String message = username + " likes spot " + filename;
-				for(Socket s : Server.clients){
+				for(SSLSocket s : Server.clients){
 					TCPSender sender = new TCPSender(s,message);
 					new Thread(sender).start();
 				}

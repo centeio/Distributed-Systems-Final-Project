@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.management.Notification;
 import javax.management.NotificationListener;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 
 public class Client implements NotificationListener {
@@ -31,13 +34,13 @@ public class Client implements NotificationListener {
 	private Queue<ArrayList<String>> actions;
 	public BlockingQueue<Object> queue;
 	public ConcurrentHashMap<String, HashMap<Integer, Chunk>> files;
-	private Socket socket;
+	private SSLSocket socket;
 
-	public Socket getSocket() {
+	public SSLSocket getSocket() {
 		return socket;
 	}
 
-	public void setSocket(Socket socket) {
+	public void setSocket(SSLSocket socket) {
 		this.socket = socket;
 	}
 
@@ -71,71 +74,102 @@ public class Client implements NotificationListener {
 
 
 	private void startConnection() throws UnknownHostException, IOException {
-		this.socket = new Socket("127.0.0.1", 6458);
-		DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
-		outToServer.writeBytes("\n");
+		System.setProperty("javax.net.ssl.keyStore", "../files/client.keys");
+		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
+		System.setProperty("javax.net.ssl.trustStore", "../files/truststore");
+		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
+
+		//Create socket
+		SSLSocket s = null;  
+		SSLSocketFactory ssf = null;  
+
+		ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();  
+
+		try {
+			s = (SSLSocket) ssf.createSocket("127.0.0.1", 6458);  
+		}  
+		catch( IOException e) {  
+			System.out.println("Client - Failed to create SSLSocket");  
+			e.getMessage();  
+			return;  
+		} 
+
+		//Start handshake
+		try {
+			s.startHandshake();
+		} catch (IOException e) {
+			System.out.println("Client - Failed to handshake");
+			e.getMessage();
+		}
+		
+		PrintWriter printer = new PrintWriter(s.getOutputStream(),true);
+		printer.println("Connect");
+		
+		socket = s;
+		socket.setKeepAlive(true);
+
 		NewLike newLike = new NewLike(this);
 		new Thread(newLike).start();
 	}
 
 
 
-public String getlocation() {
-	return location;
-}
+	public String getlocation() {
+		return location;
+	}
 
-public void setlocation(String location) {
-	this.location = location;
-	this.locationupdated = false;
-}
+	public void setlocation(String location) {
+		this.location = location;
+		this.locationupdated = false;
+	}
 
-public String getServerip() {
-	return serverip;
-}
+	public String getServerip() {
+		return serverip;
+	}
 
-public void setServerip(String serverip) {
-	this.serverip = serverip;
-}
+	public void setServerip(String serverip) {
+		this.serverip = serverip;
+	}
 
-public ArrayList<String> getNextAction() {		
-	return actions.poll();
-}
+	public ArrayList<String> getNextAction() {		
+		return actions.poll();
+	}
 
-public String getId() {
-	return id;
-}
+	public String getId() {
+		return id;
+	}
 
-public void setId(String id) {
-	this.id = id;
-}
+	public void setId(String id) {
+		this.id = id;
+	}
 
-public Unicast getUnicast() {
-	return unicast;
-}
+	public Unicast getUnicast() {
+		return unicast;
+	}
 
-public void setUnicast(Unicast unicast) {
-	this.unicast = unicast;
-}
+	public void setUnicast(Unicast unicast) {
+		this.unicast = unicast;
+	}
 
-@Override
-public void handleNotification(Notification not, Object obj) {
-	// TODO Auto-generated method stub
+	@Override
+	public void handleNotification(Notification not, Object obj) {
+		// TODO Auto-generated method stub
 
-}
+	}
 
-public boolean locationupdated() {
-	return locationupdated;
-}
+	public boolean locationupdated() {
+		return locationupdated;
+	}
 
-public void setLocationupdated(boolean locationupdated) {
-	this.locationupdated = locationupdated;
-}
+	public void setLocationupdated(boolean locationupdated) {
+		this.locationupdated = locationupdated;
+	}
 
-public void addAction(ArrayList<String> action) {
-	actions.add(action);
-	
-}
+	public void addAction(ArrayList<String> action) {
+		actions.add(action);
 
-//TODO Thread para receber notificaes e ficheiros	
+	}
+
+	//TODO Thread para receber notificaes e ficheiros	
 
 }
