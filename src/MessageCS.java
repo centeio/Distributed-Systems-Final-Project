@@ -23,7 +23,7 @@ public class MessageCS implements Message{
 					if((action = client.getNextAction()) != null){
 						actionname = action.get(0);
 						fileid = action.get(1);
-						message = getString(actionname,fileid);
+						message = getString(actionname, client.getlocation(), client.getUsername());
 						response = Unicast.sendPOST(message);
 
 					}else{
@@ -58,12 +58,13 @@ public class MessageCS implements Message{
 	}
 
 	@Override
-	public String getString(String action, String fileid) throws JSONException{
-		//{"type":"request","location":"value","action":"value"}
+	public String getString(String action, String location, String username) throws JSONException{
+		//{"type":action,"location":location,"username":username}
 		JSONObject info = new JSONObject();
 
 		info.put("type", action);
-		info.put("filename", fileid);
+		info.put("location", location);
+		info.put("username", username);
 
 		return info.toString();
 

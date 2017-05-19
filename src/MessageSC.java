@@ -18,7 +18,7 @@ public class MessageSC implements Message {
 
 
 	@Override
-	public String getString(String action, String fileid) throws JSONException {
+	public String getString(String action, String location, String username) throws JSONException {
 		// TODO Auto-generated method stub
 		return null;
 	}
