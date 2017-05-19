@@ -30,7 +30,7 @@ public class Client implements NotificationListener {
 	private Locator locator;
 	private String serverip;
 	private Unicast unicast;
-	private String id;
+	private String username;
 	private Queue<ArrayList<String>> actions;
 	public BlockingQueue<Object> queue;
 	public ConcurrentHashMap<String, HashMap<Integer, Chunk>> files;
@@ -45,13 +45,14 @@ public class Client implements NotificationListener {
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException{
-		Client c = new Client();
+		Client c = new Client(args[1]);
 		c.setServerip(args[0]);
 	}
 
-	public Client() throws UnknownHostException, IOException {
+	public Client(String username) throws UnknownHostException, IOException {
 		super();
 
+		this.username = username;
 		locator = new Locator(this);
 		setUnicast(new Unicast(this));
 		actions = new PriorityQueue<ArrayList<String>>();
@@ -59,7 +60,7 @@ public class Client implements NotificationListener {
 		files = new ConcurrentHashMap<String, HashMap<Integer, Chunk>>();
 
 		startConnection();
-
+		
 		locator.start();
 		new MessageCS(this);
 
@@ -135,12 +136,12 @@ public class Client implements NotificationListener {
 		return actions.poll();
 	}
 
-	public String getId() {
-		return id;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public Unicast getUnicast() {
