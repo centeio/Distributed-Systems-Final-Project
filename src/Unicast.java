@@ -56,6 +56,8 @@ public class Unicast {
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		
 		con.setRequestMethod("POST");
+		con.setConnectTimeout(5000); //set timeout to 5 seconds
+		
 		//Send JSON
 		con.setDoOutput(true);
 		con.setDoInput(true);

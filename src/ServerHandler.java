@@ -41,7 +41,7 @@ public class ServerHandler implements HttpHandler
 				/*guardar informacao de like e iniciar notificacao para restantes clientes NUNO
 				 * alterar ficheiro JSON do servidor NUNO*/ 
 				username = info.getString("username");
-				filename = info.getString("filename");
+				filename = Server.file_mapping.get(info.getString("location")).getKey();
 				
 				json = new JSONObject();
 				
