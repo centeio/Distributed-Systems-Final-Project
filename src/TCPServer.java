@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -43,6 +44,7 @@ public class TCPServer implements Runnable {
 			
 			SSLSocket socket;
 
+			System.out.println("Server IP: "+InetAddress.getLocalHost());
 			while(true){	
 				socket = (SSLSocket) s.accept();
 				System.out.println("Accepted new Client.");

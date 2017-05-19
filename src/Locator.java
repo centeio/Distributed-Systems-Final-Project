@@ -12,7 +12,7 @@ public class Locator extends Thread {
 	public void run() {
 		boolean closed = false;
 		do{
-			System.out.println("Para sair escreva \"sair\" \n Localizacao: ");
+			System.out.println("Para sair escreva \"sair\" \n Para dar like escreva \"like\" \n Localizacao: ");
 			String input = System.console().readLine();
 			if(input.toLowerCase().equals("sair")){
 				closed = true;
