@@ -22,7 +22,8 @@ public class NewLike implements Runnable{
 
 			}
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			System.out.println("Conection refused");
+			//e1.printStackTrace();
 		}
 	}
 
