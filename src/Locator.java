@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,6 +16,12 @@ public class Locator extends Thread {
 			String input = System.console().readLine();
 			if(input.toLowerCase().equals("sair")){
 				closed = true;
+				try {
+					client.getSocket().close();
+				} catch (IOException e) {
+					System.out.println("Could not close socket from " + client.getUsername());
+					e.printStackTrace();
+				}
 
 			}else if(input.toLowerCase().equals("like")){
 				ArrayList<String> action = new ArrayList<String>();

@@ -46,6 +46,10 @@ public class Client implements NotificationListener {
 
 	public static void main(String[] args) throws UnknownHostException, IOException{
 		Client c = new Client(args[1]);
+		if(args.length < 2){
+			System.out.println("Usage: Client <server ip> <username>");
+			return;
+		}
 		c.setServerip(args[0]);
 	}
 
