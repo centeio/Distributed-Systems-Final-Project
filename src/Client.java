@@ -25,7 +25,7 @@ public class Client implements NotificationListener {
 	private Unicast unicast;
 	private String username;
 	private Queue<ArrayList<String>> actions;
-	public BlockingQueue<Object> queue;
+	public ExecutorService executor;
 	public ConcurrentHashMap<String, HashMap<Integer, Chunk>> files;
 	private SSLSocket socket;
 
@@ -53,7 +53,6 @@ public class Client implements NotificationListener {
 		locator = new Locator(this);
 		setUnicast(new Unicast(this));
 		actions = new PriorityQueue<ArrayList<String>>();
-		queue = new LinkedBlockingQueue<Object>();
 		files = new ConcurrentHashMap<String, HashMap<Integer, Chunk>>();
 
 		startConnection();
@@ -61,13 +60,9 @@ public class Client implements NotificationListener {
 		locator.start();
 		new MessageCS(this);
 
-		ExecutorService executor = Executors.newFixedThreadPool(5);
-		for (int i = 0; i < 1; i++) {
-			Runnable worker = new Operator(this);
-			executor.execute(worker);
-		}
-		executor.shutdown();
-		while (!executor.isTerminated()) {}
+		executor = Executors.newFixedThreadPool(5);
+		
+		
 	}
 
 
@@ -165,6 +160,10 @@ public class Client implements NotificationListener {
 	public void addAction(ArrayList<String> action) {
 		actions.add(action);
 
+	}
+
+	public Locator getLocator() {
+		return locator;
 	}
 
 	//TODO Thread para receber notificaes e ficheiros	

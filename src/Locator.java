@@ -5,13 +5,14 @@ import java.util.Scanner;
 
 public class Locator extends Thread {
 	private Client client;
+	private boolean closed;
 
 	public Locator(Client client) {
 		this.client = client;	
+		this.closed = false;
 	}
 
 	public void run() {
-		boolean closed = false;
 		Scanner in = new Scanner(System.in);
 		
 		do{
@@ -37,6 +38,13 @@ public class Locator extends Thread {
 		}while(!closed);
 		
 		in.close();
+
+		client.executor.shutdown();
+		while (!client.executor.isTerminated()) {}
+	}
+
+	public boolean isClosed() {
+		return closed;
 	}
 
 

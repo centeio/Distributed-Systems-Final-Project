@@ -1,14 +1,13 @@
+import java.util.HashMap;
+
 //por chunk
-public class Download {
+public class Download extends Protocol{
     private String filename;
     private int numChunks;
-    private String message = "check";
 
-    public Download(){
+    public Download(Client client, String filename, int numChunks){
+    	super(client);
     	
-    }
-
-    public Download(String filename, int numChunks){
         this.filename = filename;
         this.numChunks = numChunks;
     }
@@ -20,28 +19,28 @@ public class Download {
                 '}';
     }
 
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 	public int getNumChunks() {
 		return numChunks;
-	}
-
-	public void setNumChunks(int numChunks) {
-		this.numChunks = numChunks;
 	}
 
 	public String getFilename() {
 		return filename;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	@Override
+	public void run() {
+
+		/*
+		 * Download initiator
+		 * 
+		 * If Download protocol chunk is null, then create GetChunk protocol for each of the chunks
+		 * and put it in the queue
+		 */
+		client.files.put(filename, new HashMap<Integer,Chunk>());
+		
+		for(int i = 0; i < numChunks; i++){
+			this.client.executor.execute(new GetChunk(client, i, filename, numChunks));
+		}
 	}
 
 

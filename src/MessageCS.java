@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
@@ -33,11 +34,13 @@ public class MessageCS implements Message{
 							//TODO INES response gives file information
 							fileid = response.getString("filename");
 							int noChunks = response.getInt("noChunk");
-							client.queue.add(new Download(fileid, noChunks));
+							client.executor.execute(new Download(client, fileid, noChunks));
 							client.setLocationupdated(true);
 						}
 					}
-				
+					if(client.getLocator().isClosed()){
+						scheduler.shutdown();
+					}
 
 				} catch (JSONException | IOException e) {
 					e.printStackTrace();
