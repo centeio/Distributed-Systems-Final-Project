@@ -33,7 +33,7 @@ public class Unicast {
 		}
 		
 		if(con == null){
-			return new JSONObject("{error: Server not reachable");
+			return new JSONObject("{error: Server not reachable}");
 		}
 
 		BufferedReader in = new BufferedReader(

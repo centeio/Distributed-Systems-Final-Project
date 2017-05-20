@@ -139,7 +139,7 @@ public class ServerHandler implements HttpHandler
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 		
 		try{
-			File file = new File("../database/files/" + name);
+			File file = new File("./database/files/" + name);
 
 			FileInputStream stream = new FileInputStream(file);
 			MulticastSocket socket = new MulticastSocket();

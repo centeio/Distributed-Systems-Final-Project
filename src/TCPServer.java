@@ -19,9 +19,9 @@ public class TCPServer implements Runnable {
 	@Override
 	public void run() {
 		try {
-			System.setProperty("javax.net.ssl.keyStore", "../files/server.keys");
+			System.setProperty("javax.net.ssl.keyStore", "./files/server.keys");
 			System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-			System.setProperty("javax.net.ssl.trustStore", "../files/truststore");
+			System.setProperty("javax.net.ssl.trustStore", "./files/truststore");
 			System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 			
 			//Create server socket
@@ -35,7 +35,8 @@ public class TCPServer implements Runnable {
 			}  
 			catch( IOException e) {  
 			    System.out.println("Server - Failed to create SSLServerSocket");  
-			    e.getMessage();  
+			    e.getMessage();
+			    e.printStackTrace();
 			    return;  
 			} 
 			
@@ -50,7 +51,11 @@ public class TCPServer implements Runnable {
 				System.out.println("Accepted new Client.");
 
 				BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
-
+				
+				char buffer[] = new char[8000];
+				input.read(buffer);
+				System.out.println(new String(buffer));
+				
 				Server.addClient(socket);
 			}
 

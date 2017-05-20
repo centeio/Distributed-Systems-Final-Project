@@ -57,7 +57,7 @@ public class Server {
 	}
 
 	private static void loadClients() {
-		File json = new File("../database/server_clients.json");
+		File json = new File("./database/server_clients.json");
 
 		try {
 			byte[] data = Files.readAllBytes(json.toPath());
@@ -91,7 +91,7 @@ public class Server {
 	}
 
 	private static void loadFiles() {
-		File json = new File("../database/server_files.json");
+		File json = new File("./database/server_files.json");
 
 		try {
 			byte[] data = Files.readAllBytes(json.toPath());
@@ -125,7 +125,7 @@ public class Server {
 	public static void addLike(String username, String filename){
 		client_mapping.get(username).add(filename);
 		
-		File json = new File("../database/server_clients.json");
+		File json = new File("./database/server_clients.json");
 		
 		try{
 			byte[] data = Files.readAllBytes(json.toPath());

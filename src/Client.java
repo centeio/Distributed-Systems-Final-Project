@@ -1,12 +1,5 @@
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,11 +38,11 @@ public class Client implements NotificationListener {
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException{
-		Client c = new Client(args[1]);
 		if(args.length < 2){
 			System.out.println("Usage: Client <server ip> <username>");
 			return;
 		}
+		Client c = new Client(args[1]);
 		c.setServerip(args[0]);
 	}
 
@@ -79,9 +72,9 @@ public class Client implements NotificationListener {
 
 
 	private void startConnection() throws UnknownHostException, IOException {
-		System.setProperty("javax.net.ssl.keyStore", "../files/client.keys");
+		System.setProperty("javax.net.ssl.keyStore", "./files/client.keys");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-		System.setProperty("javax.net.ssl.trustStore", "../files/truststore");
+		System.setProperty("javax.net.ssl.trustStore", "./files/truststore");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 
 		//Create socket
@@ -95,20 +88,19 @@ public class Client implements NotificationListener {
 		}  
 		catch( IOException e) {  
 			System.out.println("Client - Failed to create SSLSocket");  
-			e.getMessage();  
+			e.getMessage();
+			e.printStackTrace();
 			return;  
 		} 
 
 		//Start handshake
 		try {
-			s.startHandshake();
+			PrintWriter printer = new PrintWriter(s.getOutputStream(),true);
+			printer.println("Connect");
 		} catch (IOException e) {
 			System.out.println("Client - Failed to handshake");
 			e.getMessage();
 		}
-		
-		PrintWriter printer = new PrintWriter(s.getOutputStream(),true);
-		printer.println("Connect");
 		
 		socket = s;
 		socket.setKeepAlive(true);
