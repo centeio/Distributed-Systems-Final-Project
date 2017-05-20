@@ -18,11 +18,17 @@ import org.json.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+/**
+ * Handles servers HTTP requests
+ */
 public class ServerHandler implements HttpHandler 
 {
+	
+	/* Receives servers HTTP POST requests with JSON parameters and answers in JSON as well
+	 * @see com.sun.net.httpserver.HttpHandler#handle(com.sun.net.httpserver.HttpExchange)
+	 */
 	public void handle(HttpExchange t) throws IOException 
 	{
-		//TODO 
 		String response;
 
 		String method = t.getRequestMethod();
@@ -85,7 +91,7 @@ public class ServerHandler implements HttpHandler
 				filename = info.getString("filename");
 				int chunkNo = info.getInt("chunkNo");
 				
-				//TODO INES get actual chunk data
+				//get actual chunk data
 				byte data[] = Server.chunks_mapping.get(filename).get(chunkNo).getData();
 				System.out.println(data);
 				
@@ -115,6 +121,14 @@ public class ServerHandler implements HttpHandler
 		os.close();
 	}
 
+	/**
+	 * Parses the request into JSON.
+	 *
+	 * @param t the Http exchange
+	 * @return response in JSONObject format
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws JSONException the JSON exception
+	 */
 	private JSONObject parseIntoJSON(HttpExchange t) throws IOException, JSONException {
 
 		byte[] rbuf = new byte[(int) Math.pow(2,16)];
@@ -132,7 +146,9 @@ public class ServerHandler implements HttpHandler
 	 * Divides a file into an array of chunks with 64KB of size.
 	 * Algorithm based on the following StackOverflow question/answer.
 	 * http://stackoverflow.com/questions/4431945/split-and-join-back-a-binary-file-in-java
-	 * @param name Name of the file
+	 *
+	 * @param name filename
+	 * @return array list of chunks
 	 */
 	public ArrayList<Chunk> divideFileIntoChunks(String name){
 

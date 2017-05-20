@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.management.Notification;
 import javax.management.NotificationListener;
@@ -22,7 +20,6 @@ public class Client implements NotificationListener {
 	private boolean locationupdated = true;
 	private Locator locator;
 	private String serverip;
-	private Unicast unicast;
 	private String username;
 	private Queue<ArrayList<String>> actions;
 	public ExecutorService executor;
@@ -51,7 +48,6 @@ public class Client implements NotificationListener {
 
 		this.username = username;
 		locator = new Locator(this);
-		setUnicast(new Unicast(this));
 		actions = new PriorityQueue<ArrayList<String>>();
 		files = new ConcurrentHashMap<String, HashMap<Integer, Chunk>>();
 
@@ -133,14 +129,6 @@ public class Client implements NotificationListener {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public Unicast getUnicast() {
-		return unicast;
-	}
-
-	public void setUnicast(Unicast unicast) {
-		this.unicast = unicast;
 	}
 
 	@Override

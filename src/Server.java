@@ -17,18 +17,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.sun.net.httpserver.HttpServer;
 
+/**
+ * The Server.
+ */
 public class Server {
-	//username = array_likes
+	/** Maps the clients by their username to the names of the files they like */
 	static Map<String, ArrayList<String>> client_mapping = new ConcurrentHashMap<String, ArrayList<String>>();
 	
-	//location = <filename, numChunks>
+	/** Maps the location to the corresponding filename and number of chunks*/
 	static Map<String, SimpleEntry<String, Integer>> file_mapping = new ConcurrentHashMap<String, SimpleEntry<String, Integer>> ();
 	
-	//filename = ArrayList<Chunk>
+	/** Maps the filename to the corresponding file's chunks */
 	static Map<String, ArrayList<Chunk>> chunks_mapping = new ConcurrentHashMap<String, ArrayList<Chunk>>();
 	
+	/** Keeps the clients' sockets for notifications */
 	static ArrayList<SSLSocket> clients;
 	
+	/**
+	 * The main method.
+	 * Receives the ip and port for the HTTP connection.
+	 * Gives information to clients about its location and notifies if some user likes it's location
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		if(args.length < 2){
 			System.out.println("Usage Server <ip address> <port>");
@@ -51,11 +62,17 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Sets up the mapping of clients and locations
+	 */
 	public static void setup(){
 		loadFiles();
 		loadClients();
 	}
 
+	/**
+	 * Loads information regarding the tastes of the clients
+	 */
 	private static void loadClients() {
 		File json = new File("./database/server_clients.json");
 
@@ -90,6 +107,9 @@ public class Server {
 		}
 	}
 
+	/**
+	 * Loads information mapping the location to it's file
+	 */
 	private static void loadFiles() {
 		File json = new File("./database/server_files.json");
 
@@ -122,6 +142,12 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Adds a like to non-volatile memory.
+	 *
+	 * @param username name of the user who liked 
+	 * @param filename name of file liked 
+	 */
 	public static void addLike(String username, String filename){
 		client_mapping.get(username).add(filename);
 		
@@ -164,8 +190,12 @@ public class Server {
 		}
 	}
 
+	/**
+	 * Adds new client socket for notification uses.
+	 *
+	 * @param socket the client socket
+	 */
 	public static void addClient(SSLSocket socket) {
 		clients.add(socket);
-		
 	}
 }

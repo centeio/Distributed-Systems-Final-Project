@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.json.JSONException;
 import org.json.JSONObject;
 //para localizao Client -> Server com Ao (LIKE ou null) 
-public class MessageCS implements Message{
+public class MessageCS{
 	private final ScheduledExecutorService scheduler =	Executors.newScheduledThreadPool(1);	private Client client = null;
 
 	public MessageCS(Client client) {
@@ -52,7 +52,6 @@ public class MessageCS implements Message{
 		System.out.println("after sender");
 
 	}
-	@Override
 	public String getString(String location) throws JSONException{		//{"type":"request","location":"value","action":"value"}		JSONObject info   = new JSONObject();
 		info.put("type", "locate");
 		info.put("location", location);
@@ -60,7 +59,6 @@ public class MessageCS implements Message{
 		return info.toString();
 	}
 
-	@Override
 	public String getString(String action, String location, String username) throws JSONException{
 		//{"type":action,"location":location,"username":username}
 		JSONObject info = new JSONObject();
