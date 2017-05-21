@@ -16,7 +16,7 @@ public class Locator extends Thread {
 		Scanner in = new Scanner(System.in);
 		
 		do{
-			System.out.println("Para sair escreva \"sair\" \n Para dar like escreva \"like\" \n Localizacao: ");
+			System.out.println("Para sair escreva \"sair\"\nPara dar like escreva\"like\"\nLocalizacao: ");
 
 			String input = in.nextLine();
 			if(input.toLowerCase().equals("sair")){
@@ -31,7 +31,7 @@ public class Locator extends Thread {
 			}else if(input.toLowerCase().equals("like")){
 				ArrayList<String> action = new ArrayList<String>();
 				action.addAll(Arrays.asList("like","filename"));
-				client.addAction(action);				
+				client.addAction(action);
 			}else{
 				client.setlocation(input.toLowerCase());
 			}

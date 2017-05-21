@@ -32,19 +32,19 @@ public class Unicast {
 	 * @throws ProtocolException the protocol exception
 	 * @throws JSONException the JSON exception
 	 */
-	public static JSONObject sendPOST(String message) throws MalformedURLException, IOException, ProtocolException, JSONException {
+	public static JSONObject sendPOST(String message, String serverIp) throws MalformedURLException, IOException, ProtocolException, JSONException {
 		if(mainServerURL == null){
-			mainServerURL = new URL ("http://127.0.0.1:8000/SDIS");
+			mainServerURL = new URL ("http://"+serverIp+":8000/SDIS");
 		}
 		if(backupServerURL == null){
-			backupServerURL = new URL ("http://127.0.0.1:8080/SDIS");
+			backupServerURL = new URL ("http://"+serverIp+":8080/SDIS");
 		}
 		
 		HttpURLConnection con = getValidConnection(message, mainServerURL);
 		
 		if(con == null){
 			//Try backup
-	
+			System.out.println("Main server down, connecting to backup server");
 			con = getValidConnection(message, backupServerURL);
 		}
 		
@@ -52,13 +52,13 @@ public class Unicast {
 			return new JSONObject("{error: Server not reachable}");
 		}
 
-		BufferedReader in = new BufferedReader(
-		        new InputStreamReader(con.getInputStream()));
+		BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()));
 		String inputLine;
-		StringBuffer response = new StringBuffer();
-		
+		StringBuilder response = new StringBuilder();
+			
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
+			System.out.println("response: " + response);
 		}
 		in.close();
 		
@@ -94,16 +94,18 @@ public class Unicast {
 			OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
 	
 			wr.write(message);
+			System.out.println("Message: "+message);
 			wr.flush();
 			wr.close();
 	
-			int responseCode = con.getResponseCode();
+			/*int responseCode = con.getResponseCode();
 			System.out.println("\nSending 'POST' request to URL : " + url);
-			System.out.println("Response Code : " + responseCode);
+			System.out.println("Response Code : " + responseCode);*/
 		} catch (java.net.SocketTimeoutException e) {
 			System.out.println("Timeout!!!!!");
 			return null;
 		} catch (java.io.IOException e) {
+			e.printStackTrace();
 			System.out.println("Server Down!!!!!");
 			return null;
 		}

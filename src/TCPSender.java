@@ -9,6 +9,7 @@ public class TCPSender implements Runnable{
 	public TCPSender(SSLSocket socket, String message){
 		super();
 		this.socket = socket;
+		this.message = message;
 	}
 
 

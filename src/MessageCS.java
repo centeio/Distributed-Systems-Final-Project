@@ -24,12 +24,12 @@ public class MessageCS{
 						actionname = action.get(0);
 						fileid = action.get(1);
 						message = getString(actionname, client.getlocation(), client.getUsername());
-						response = Unicast.sendPOST(message);
+						response = Unicast.sendPOST(message, client.getServerip());
 
 					}else{
 						if(!client.locationupdated()){
-							message = getString(client.getlocation());
-							response = Unicast.sendPOST(message);
+							message = getString(client.getlocation(), client.getUsername());
+							response = Unicast.sendPOST(message, client.getServerip());
 							//TODO INES response gives file information
 							fileid = response.getString("filename");
 							int noChunks = response.getInt("noChunk");
@@ -46,14 +46,12 @@ public class MessageCS{
 				}
 			}
 		};		/*runs sender every second*/
-		System.out.println("before sender");
 		scheduler.scheduleAtFixedRate(sender, 0, 1, TimeUnit.SECONDS);
-		System.out.println("after sender");
-
 	}
-	public String getString(String location) throws JSONException{		//{"type":"request","location":"value","action":"value"}		JSONObject info   = new JSONObject();
+	public String getString(String location, String username) throws JSONException{		//{"type":"request","location":"value","action":"value"}		JSONObject info   = new JSONObject();
 		info.put("type", "locate");
 		info.put("location", location);
+		info.put("username", username);
 
 		return info.toString();
 	}
@@ -67,8 +65,5 @@ public class MessageCS{
 		info.put("username", username);
 
 		return info.toString();
-
 	}
-
-
 }

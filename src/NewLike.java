@@ -16,10 +16,8 @@ public class NewLike implements Runnable{
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
 
 			while(true){
-
 				String sentence = inFromServer.readLine();
-				System.out.println(sentence);
-
+				System.out.println(sentence + "from " + client.getUsername());
 			}
 		} catch (IOException e1) {
 			System.out.println("Conection refused");

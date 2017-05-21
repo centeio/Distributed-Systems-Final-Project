@@ -31,7 +31,7 @@ public class ServerHandler implements HttpHandler
 		String response;
 
 		String method = t.getRequestMethod();
-		System.out.println(method);
+		//System.out.println(method);
 
 		//Parse JSON {"type":"request", ...}
 		try {
@@ -39,7 +39,7 @@ public class ServerHandler implements HttpHandler
 			JSONObject json = new JSONObject();
 			String filename, username;
 			
-			System.out.println(info.get("type"));
+			//System.out.println(info.get("type"));
 
 			switch((String) info.get("type")){
 			case "like":
@@ -47,9 +47,11 @@ public class ServerHandler implements HttpHandler
 				 * alterar ficheiro JSON do servidor NUNO*/ 
 				username = info.getString("username");
 				filename = Server.file_mapping.get(info.getString("location")).getKey();
-				
+
 				json = new JSONObject();
 				
+				//System.out.println("Got a like!");
+				System.out.println(username + " " + filename);
 				if(Server.client_mapping.get(username).contains(filename)){
 					//already has a like
 					json.put("type", "like");
@@ -58,7 +60,7 @@ public class ServerHandler implements HttpHandler
 					//new like
 					json.put("type", "like");
 					json.put("value", true);
-					
+										
 					Server.addLike(username, filename);
 				}
 
@@ -71,6 +73,7 @@ public class ServerHandler implements HttpHandler
 				}
 				break;
 			case "locate":
+				username = info.getString("username"); Server.registerClient(username);
 				filename = ((SimpleEntry<String, Integer>) Server.file_mapping.get(info.get("location"))).getKey();
 				if(Server.chunks_mapping.get(filename) == null){
 					ArrayList<Chunk> chunks = divideFileIntoChunks(filename);
@@ -92,7 +95,7 @@ public class ServerHandler implements HttpHandler
 				
 				//get actual chunk data
 				byte data[] = Server.chunks_mapping.get(filename).get(chunkNo).getData();
-				System.out.println(data);
+				//System.out.println(data);
 				
 				//format response JSON {"type":"getInfo", "filename":value, "chunkNo":value, "data":value}
 				json = new JSONObject();
@@ -136,7 +139,7 @@ public class ServerHandler implements HttpHandler
 
 		String result = new String(rbuf, StandardCharsets.ISO_8859_1).trim();
 		
-		System.out.println(result);
+		//System.out.println(result);
 
 		return new JSONObject(result);
 	}
@@ -154,7 +157,7 @@ public class ServerHandler implements HttpHandler
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 		
 		try{
-			File file = new File("./database/files/" + name);
+			File file = new File("../database/files/" + name);
 
 			FileInputStream stream = new FileInputStream(file);
 			MulticastSocket socket = new MulticastSocket();

@@ -34,7 +34,7 @@ public class Restore extends Protocol{
 	 */
 	@Override
 	public void run() {
-		File file = new File(filename);
+		File file = new File(this.client.getUsername() + "/" + filename);
 		try {
 			Files.deleteIfExists(file.toPath());
 		} catch (IOException e1) {
