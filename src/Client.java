@@ -255,5 +255,4 @@ public class Client {
 	public Locator getLocator() {
 		return locator;
 	}
-
 }
