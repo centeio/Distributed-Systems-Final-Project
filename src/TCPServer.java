@@ -7,13 +7,22 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
+/**
+ * The TCP Server.
+ */
 public class TCPServer implements Runnable {
 
+	/**
+	 * Instantiates a new TCP server.
+	 */
 	public TCPServer() {
 		super();
 
 	}
 
+	/* Creates a TCP Server and registers new clients for notification
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		try {

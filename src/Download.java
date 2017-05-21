@@ -1,10 +1,23 @@
 import java.util.HashMap;
 
-//por chunk
+/**
+ * The Protocol Download.
+ */
 public class Download extends Protocol{
+    
+    /** The file's name. */
     private String filename;
+    
+    /** File's total number of chunks. */
     private int numChunks;
 
+    /**
+     * Instantiates a new download.
+     *
+     * @param client the client
+     * @param filename the file's name
+     * @param numChunks the total number of chunks
+     */
     public Download(Client client, String filename, int numChunks){
     	super(client);
     	
@@ -12,6 +25,9 @@ public class Download extends Protocol{
         this.numChunks = numChunks;
     }
     
+    /* For debug purposes
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return "Download{" +
@@ -19,14 +35,28 @@ public class Download extends Protocol{
                 '}';
     }
 
+	/**
+	 * Gets the number of chunks.
+	 *
+	 * @return the number of chunks
+	 */
 	public int getNumChunks() {
 		return numChunks;
 	}
 
+	/**
+	 * Gets the filename.
+	 *
+	 * @return the filename
+	 */
 	public String getFilename() {
 		return filename;
 	}
 
+	/* Executs the protocol by creating a GetChunk protocol for each of the chunks
+	 * and sending it for execution
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 

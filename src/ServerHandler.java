@@ -66,7 +66,7 @@ public class ServerHandler implements HttpHandler
 
 				response = json.toString();
 				
-				String message = username + " likes spot " + filename;
+				String message = username + " likes spot " + info.getString("location");
 				for(SSLSocket s : Server.clients){
 					TCPSender sender = new TCPSender(s,message);
 					new Thread(sender).start();
