@@ -40,18 +40,18 @@ public class Client implements NotificationListener {
 			System.out.println("Usage: Client <server ip> <username>");
 			return;
 		}
-		Client c = new Client(args[1]);
-		c.setServerip(args[0]);
+		Client c = new Client(args[0], args[1]);
 	}
 
-	public Client(String username) throws UnknownHostException, IOException {
+	public Client(String Ip, String username) throws UnknownHostException, IOException {
 		super();
 
 		this.username = username;
 		locator = new Locator(this);
 		actions = new PriorityQueue<ArrayList<String>>();
 		files = new ConcurrentHashMap<String, HashMap<Integer, Chunk>>();
-
+		serverip = Ip;
+		
 		startConnection();
 		
 		locator.start();
@@ -65,9 +65,9 @@ public class Client implements NotificationListener {
 
 
 	private void startConnection() throws UnknownHostException, IOException {
-		System.setProperty("javax.net.ssl.keyStore", "./files/client.keys");
+		System.setProperty("javax.net.ssl.keyStore", "../files/client.keys");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-		System.setProperty("javax.net.ssl.trustStore", "./files/truststore");
+		System.setProperty("javax.net.ssl.trustStore", "../files/truststore");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 
 		//Create socket
@@ -77,7 +77,7 @@ public class Client implements NotificationListener {
 		ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();  
 
 		try {
-			s = (SSLSocket) ssf.createSocket("127.0.0.1", 6458);  
+			s = (SSLSocket) ssf.createSocket(serverip, 6458);  
 		}  
 		catch( IOException e) {  
 			System.out.println("Client - Failed to create SSLSocket");  

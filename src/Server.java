@@ -1,7 +1,9 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -38,10 +40,11 @@ public class Server {
 	 * Gives information to clients about its location and notifies if some user likes it's location
 	 *
 	 * @param args the arguments
+	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) {
-		if(args.length < 2){
-			System.out.println("Usage Server <ip address> <port>");
+	public static void main(String[] args) throws UnknownHostException {
+		if(args.length < 1){
+			System.out.println("Usage Server <port>");
 			return;
 		}
 		clients = new ArrayList<SSLSocket>();
@@ -50,7 +53,7 @@ public class Server {
 		
 		setup();		
 		//HTTP Server
-		final String IP = args[0];		final int PORT = Integer.parseInt(args[1]);
+		final String IP = InetAddress.getLocalHost().getHostAddress();		final int PORT = Integer.parseInt(args[0]);
 		try {
 			InetSocketAddress inet = new InetSocketAddress(IP, PORT);
 			HttpServer server = HttpServer.create(inet, 0);			server.createContext("/SDIS", new ServerHandler());
@@ -73,7 +76,7 @@ public class Server {
 	 * Loads information regarding the tastes of the clients
 	 */
 	private static void loadClients() {
-		File json = new File("./database/server_clients.json");
+		File json = new File("../database/server_clients.json");
 
 		try {
 			byte[] data = Files.readAllBytes(json.toPath());
@@ -110,7 +113,7 @@ public class Server {
 	 * Loads information mapping the location to it's file
 	 */
 	private static void loadFiles() {
-		File json = new File("./database/server_files.json");
+		File json = new File("../database/server_files.json");
 
 		try {
 			byte[] data = Files.readAllBytes(json.toPath());
@@ -149,7 +152,7 @@ public class Server {
 	public static void addLike(String username, String filename){
 		client_mapping.get(username).add(filename);
 		
-		File json = new File("./database/server_clients.json");
+		File json = new File("../database/server_clients.json");
 		
 		try{
 			byte[] data = Files.readAllBytes(json.toPath());

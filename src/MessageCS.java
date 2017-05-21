@@ -24,12 +24,12 @@ public class MessageCS{
 						actionname = action.get(0);
 						fileid = action.get(1);
 						message = getString(actionname, client.getlocation(), client.getUsername());
-						response = Unicast.sendPOST(message);
+						response = Unicast.sendPOST(message, client.getServerip());
 
 					}else{
 						if(!client.locationupdated()){
 							message = getString(client.getlocation(), client.getUsername());
-							response = Unicast.sendPOST(message);
+							response = Unicast.sendPOST(message, client.getServerip());
 							//TODO INES response gives file information
 							fileid = response.getString("filename");
 							int noChunks = response.getInt("noChunk");

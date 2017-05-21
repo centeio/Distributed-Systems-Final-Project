@@ -82,7 +82,7 @@ public class GetChunk extends Protocol{
 
 		JSONObject response;
 		try {
-			response = Unicast.sendPOST(info.toString());
+			response = Unicast.sendPOST(info.toString(), client.getServerip());
 		} catch (IOException | JSONException e) {
 			System.err.println(e.getMessage());
 			return;
