@@ -156,6 +156,5 @@ public class Client implements NotificationListener {
 		return locator;
 	}
 
-	//TODO Thread para receber notificaes e ficheiros	
 
 }
