@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
@@ -56,9 +57,10 @@ public class Client implements NotificationListener {
 		locator.start();
 		new MessageCS(this);
 
+		File dir = new File(username);
+		dir.mkdir();
+				
 		executor = Executors.newFixedThreadPool(5);
-		
-		
 	}
 
 

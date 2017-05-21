@@ -98,12 +98,13 @@ public class Unicast {
 			wr.close();
 	
 			int responseCode = con.getResponseCode();
-			System.out.println("\nSending 'POST' request to URL : " + url);
-			System.out.println("Response Code : " + responseCode);
+			/*System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Response Code : " + responseCode);*/
 		} catch (java.net.SocketTimeoutException e) {
 			System.out.println("Timeout!!!!!");
 			return null;
 		} catch (java.io.IOException e) {
+			e.printStackTrace();
 			System.out.println("Server Down!!!!!");
 			return null;
 		}
