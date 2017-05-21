@@ -36,7 +36,7 @@ public class Server {
 	
 	/**
 	 * The main method.
-	 * Receives the ip and port for the HTTP connection.
+	 * Receives the port for the HTTP connection.
 	 * Gives information to clients about its location and notifies if some user likes it's location
 	 *
 	 * @param args the arguments
