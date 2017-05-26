@@ -97,7 +97,8 @@ public class Client {
 		files = new ConcurrentHashMap<String, HashMap<Integer, Chunk>>();
 		serverip = Ip;
 		
-		startConnection();
+		startConnection(6458);
+		startConnection(6459);
 		
 		locator.start();
 		new MessageCS(this);
@@ -115,7 +116,7 @@ public class Client {
 	 * @throws UnknownHostException the unknown host exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void startConnection() throws UnknownHostException, IOException {
+	private void startConnection(int port) throws UnknownHostException, IOException {
 		System.setProperty("javax.net.ssl.keyStore", "../files/client.keys");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 		System.setProperty("javax.net.ssl.trustStore", "../files/truststore");
@@ -128,7 +129,7 @@ public class Client {
 		ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();  
 
 		try {
-			s = (SSLSocket) ssf.createSocket(serverip, 6458);  
+			s = (SSLSocket) ssf.createSocket(serverip, port);  
 		}  
 		catch( IOException e) {  
 			System.out.println("Client - Failed to create SSLSocket");  

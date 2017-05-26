@@ -58,7 +58,7 @@ public class Unicast {
 			
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
-			System.out.println("response: " + response);
+			//System.out.println("response: " + response);
 		}
 		in.close();
 		

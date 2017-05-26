@@ -11,13 +11,14 @@ import javax.net.ssl.SSLSocket;
  * The TCP Server.
  */
 public class TCPServer implements Runnable {
+	int port;
 
 	/**
 	 * Instantiates a new TCP server.
 	 */
-	public TCPServer() {
+	public TCPServer(int port) {
 		super();
-
+		this.port = port;
 	}
 
 	/* Creates a TCP Server and registers new clients for notification
@@ -38,7 +39,7 @@ public class TCPServer implements Runnable {
 			ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 			
 			try {  
-			    s = (SSLServerSocket) ssf.createServerSocket(6458);  
+			    s = (SSLServerSocket) ssf.createServerSocket(port);  
 			}  
 			catch( IOException e) {  
 			    System.out.println("Server - Failed to create SSLServerSocket");  
@@ -61,7 +62,7 @@ public class TCPServer implements Runnable {
 				
 				char buffer[] = new char[8000];
 				input.read(buffer);
-				System.out.println(new String(buffer));
+				System.out.println(new String(buffer).trim());
 				
 				Server.addClient(socket);
 			}

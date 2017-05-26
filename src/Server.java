@@ -21,7 +21,8 @@ import com.sun.net.httpserver.HttpServer;
 /**
  * The Server.
  */
-public class Server {
+public class Server {
+	static int PORT;
 	/** Maps the clients by their username to the names of the files they like */
 	static Map<String, ArrayList<String>> client_mapping = new ConcurrentHashMap<String, ArrayList<String>>();
 	
@@ -43,17 +44,17 @@ public class Server {
 	 * @throws UnknownHostException 
 	 */
 	public static void main(String[] args) throws UnknownHostException {
-		if(args.length < 1){
-			System.out.println("Usage Server <port>");
+		if(args.length < 2){
+			System.out.println("Usage Server <portHTTP> <portSSL>");
 			return;
 		}
 		clients = new ArrayList<SSLSocket>();
-		TCPServer tcpserver = new TCPServer();
+		TCPServer tcpserver = new TCPServer(Integer.parseInt(args[1]));
 		new Thread(tcpserver).start();
 		
 		setup();		
 		//HTTP Server
-		final String IP = InetAddress.getLocalHost().getHostAddress();		final int PORT = Integer.parseInt(args[0]);
+		final String IP = InetAddress.getLocalHost().getHostAddress();		Server.PORT = Integer.parseInt(args[0]);
 		try {
 			InetSocketAddress inet = new InetSocketAddress(IP, PORT);
 			HttpServer server = HttpServer.create(inet, 0);			server.createContext("/SDIS", new ServerHandler());
