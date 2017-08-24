@@ -1,3 +1,7 @@
 # Projeto final de SDIS
 
 No âmbito da disciplina da cadeira de Sistemas Distribuídos, do 3º ano do Mestrado Integrado em Engenharia Informática e Computação, realizámos uma aplicação distribuída baseada em REST (Representational State Transfer) e TCP com servidor próprio. Esta aplicação pretende simular um serviço de um museu/casa de arte/casa interativa e tem a vertente de servidor e cliente. Assim, dependendo de um dado de input do Cliente, como o nome da sala onde se encontra (noutro nível de abstração, a localização propriamente dita), a aplicação descarrega o ficheiro correspondente, que se encontra no servidor. Quando um Cliente dá “like” nalguma sala, os outros recebem a notificação e o sistema atualiza e regista esse like.
+
+# SDIS final project
+
+Within the subject o Distributed Systems of the 3rd year of the Integrated Master in Informatics and Computing Engineering, we developed a distributed application based on REST (Representational State Transfer) and TCP with personal server. This application simulates a museum interactive service for both server and client. Depending on the client's input, such as the name of the room (in the future, the mobile's location), the app downloads the files that are related to the things in that room. Also, when a client "likes" a room, the others receive a notification and the systems registers such like. This is a safe and crash-resistant application.
